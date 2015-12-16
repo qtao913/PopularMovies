@@ -9,26 +9,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.ImageView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.squareup.picasso.Picasso;
 
 
-public class MainActivity extends ActionBarActivity {
-    static Movie[] movies = {
-            new Movie(R.drawable.test1),
-            new Movie(R.drawable.test2),
-            new Movie(R.drawable.test3),
-            new Movie(R.drawable.test4)
-    };
+public class MovieDetailActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_movie_detail);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
@@ -40,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_movie_detail, menu);
         return true;
     }
 
@@ -63,7 +54,6 @@ public class MainActivity extends ActionBarActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
-        private AndroidImageAdapter imageAdapter;
 
         public PlaceholderFragment() {
         }
@@ -71,28 +61,17 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-
-
-            List<Movie> movieList = new ArrayList<>(Arrays.asList(movies));
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            populateMovieListView(rootView, movieList);
-            //ImageView test = (ImageView)rootView.findViewById(R.id.test_piccaso);
-            //Picasso.with(getActivity()).load("http://i.imgur.com/DvpvklR.png").into(test);
-            return rootView;
-        }
-
-        private void populateMovieListView(View rootView, List<Movie> movies) {
-            imageAdapter = new AndroidImageAdapter(getActivity(), movies);
-            GridView movieGridView = (GridView) rootView.findViewById(R.id.grid_movie_view);
-            movieGridView.setAdapter(imageAdapter);
-            movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v,
-                                        int position, long id) {
-                    Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-                    intent.putExtra("movieId", position);
-                    startActivity(intent);
+            View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
+            ImageView movieDetailView = (ImageView) rootView.findViewById(R.id.movie_detail);
+            Intent movieDetail = getActivity().getIntent();
+            if (movieDetail != null) {
+                int position = movieDetail.getIntExtra("movieId", -1);
+                if (position != -1) {
+                    Picasso.with(getActivity()).load(MainActivity.movies[position].imageResourceId).into(movieDetailView);
                 }
-            });
+            }
+
+            return rootView;
         }
     }
 }

@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -33,6 +36,23 @@ public class MoviePosterMainFragment extends Fragment {
         } else {
             movieList = savedInstanceState.getParcelableArrayList("movie");
         }
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.movie_main_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.movie_refresh) {
+            FetchMovieTask fetchMovieTask = new FetchMovieTask();
+            fetchMovieTask.execute("popularity.desc");
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

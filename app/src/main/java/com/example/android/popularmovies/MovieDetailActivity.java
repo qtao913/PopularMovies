@@ -1,6 +1,5 @@
 package com.example.android.popularmovies;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -63,12 +62,9 @@ public class MovieDetailActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
             ImageView movieDetailView = (ImageView) rootView.findViewById(R.id.movie_detail);
-            Intent movieDetail = getActivity().getIntent();
+            Movie movieDetail = getActivity().getIntent().getParcelableExtra("movie");
             if (movieDetail != null) {
-                int position = movieDetail.getIntExtra("movieId", -1);
-                if (position != -1) {
-                    Picasso.with(getActivity()).load(MainActivity.movies[position].imageResourceId).into(movieDetailView);
-                }
+                Picasso.with(getActivity()).load(movieDetail.imageResourceId).into(movieDetailView);
             }
 
             return rootView;

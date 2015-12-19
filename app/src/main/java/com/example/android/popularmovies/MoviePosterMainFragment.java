@@ -1,7 +1,9 @@
 package com.example.android.popularmovies;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,18 +15,11 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MoviePosterMainFragment extends Fragment {
     public static AndroidImageAdapter imageAdapter;
     private ArrayList<Movie> movieList;
-    static Movie[] movies = {
-            new Movie(1,"StarWar","https://cdn.amctheatres.com/titles/images/Poster/Large/2690_star-wars-the-force-awakens_E1E8.jpg","no detail",0.0, "2015-12-18"),
-            new Movie(2,"Sisters","https://cdn.amctheatres.com/titles/images/Poster/Large/2921_sisters_4FA6.jpg","no detail",0.0, "2015-11-09"),
-            new Movie(3,"Boys On The Hood","https://cdn.amctheatres.com/titles/images/Poster/Large/2668_alvin-and-the-chipmunks-the-_836E.jpg","no detail",0.0, "2015-10-21" ),
-            new Movie(4,"Creed","https://cdn.amctheatres.com/titles/images/Poster/Large/2583_creed-temp-poster_BAF6.jpg","no detail",0.0, "2015-09-18")
-    };
     public MoviePosterMainFragment() {
     }
 
@@ -32,7 +27,7 @@ public class MoviePosterMainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(savedInstanceState == null || !savedInstanceState.containsKey("movie")) {
-            movieList = new ArrayList<>(Arrays.asList(movies));
+            movieList = new ArrayList<>();
         } else {
             movieList = savedInstanceState.getParcelableArrayList("movie");
         }
@@ -48,11 +43,27 @@ public class MoviePosterMainFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.movie_refresh) {
-            FetchMovieTask fetchMovieTask = new FetchMovieTask();
-            fetchMovieTask.execute("popularity.desc");
+            updateMovie();
+            return true;
+        } else if (id == R.id.action_settings) {
+            startActivity(new Intent(getActivity(), SettingsActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateMovie();
+    }
+
+    private void updateMovie(){
+        FetchMovieTask fetchMovieTask = new FetchMovieTask();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String sortingPref = prefs.getString(getString(R.string.sorting_preference_key),
+                getString(R.string.most_popular_value));
+        fetchMovieTask.execute(sortingPref);
     }
 
     @Override

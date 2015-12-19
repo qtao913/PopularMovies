@@ -36,17 +36,9 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
         Movie[] movies = new Movie[movieArray.length()];
         for (int i = 0; i < movieArray.length(); i++) {
             JSONObject movieObject = movieArray.getJSONObject(i);
-//            String temp = "id is: " + movieObject.getInt(MOVIE_ID)
-//                    + "\n original title is: " + movieObject.getString(MOVIE_TITLE)
-//                    + "\n synopsis: " + movieObject.getString(MOVIE_SYNOPSIS)
-//                    + "\n rating is: " + movieObject.getDouble(MOVIE_RATING)
-//                    + "\n release on: " + movieObject.getString(MOVIE_RELEASE)
-//                    + "\n";
-//            Log.v(LOG_TAG, "Each Movie Object: \n" + temp);
             int id = movieObject.getInt(MOVIE_ID);
             String title = movieObject.getString(MOVIE_TITLE);
             String imagePath = IMAGE_PATH_BASE + DEFAULT_SIZE + movieObject.getString(IMAGE_PATH);
-//            Log.v(LOG_TAG, "image path: " + imagePath);
             String synopsis = movieObject.getString(MOVIE_SYNOPSIS);
             double rating = movieObject.getDouble(MOVIE_RATING);
             String releaseDate = movieObject.getString(MOVIE_RELEASE);
@@ -68,7 +60,6 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                     .appendQueryParameter(APIID_PARAM, BuildConfig.POPULAR_MOVIES_API_KEY)
                     .build();
             URL url = new URL(buildUri.toString());
-            //Log.v(LOG_TAG, "Build URI " + buildUri.toString());
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();

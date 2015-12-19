@@ -17,13 +17,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MoviePosterMainFragment extends Fragment {
-    private AndroidImageAdapter imageAdapter;
+    public static AndroidImageAdapter imageAdapter;
     private ArrayList<Movie> movieList;
     static Movie[] movies = {
-            new Movie(R.drawable.test1),
-            new Movie(R.drawable.test2),
-            new Movie(R.drawable.test3),
-            new Movie(R.drawable.test4)
+            new Movie(1,"StarWar","https://cdn.amctheatres.com/titles/images/Poster/Large/2690_star-wars-the-force-awakens_E1E8.jpg","no detail",0.0, "2015-12-18"),
+            new Movie(2,"Sisters","https://cdn.amctheatres.com/titles/images/Poster/Large/2921_sisters_4FA6.jpg","no detail",0.0, "2015-11-09"),
+            new Movie(3,"Boys On The Hood","https://cdn.amctheatres.com/titles/images/Poster/Large/2668_alvin-and-the-chipmunks-the-_836E.jpg","no detail",0.0, "2015-10-21" ),
+            new Movie(4,"Creed","https://cdn.amctheatres.com/titles/images/Poster/Large/2583_creed-temp-poster_BAF6.jpg","no detail",0.0, "2015-09-18")
     };
     public MoviePosterMainFragment() {
     }

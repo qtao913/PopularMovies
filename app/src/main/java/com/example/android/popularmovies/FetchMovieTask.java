@@ -18,10 +18,10 @@ import java.net.URL;
 /**
  * Created by qlzh727 on 12/18/15.
  */
-public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
+public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
-    private String[] getMovieDataFromJson(String movieJsonStr) throws JSONException {
+    private Movie[] getMovieDataFromJson(String movieJsonStr) throws JSONException {
         final String MOVIE_LIST = "results";
         final String MOVIE_ID = "id";
         final String MOVIE_TITLE = "original_title";
@@ -29,35 +29,43 @@ public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
         final String MOVIE_RATING = "vote_average";
         final String MOVIE_RELEASE = "release_date";
         final String IMAGE_PATH = "poster_path";
+        final String IMAGE_PATH_BASE = "http://image.tmdb.org/t/p/";
+        final String DEFAULT_SIZE = "w185/";
         JSONObject movieJson = new JSONObject(movieJsonStr);
         JSONArray movieArray = movieJson.getJSONArray(MOVIE_LIST);
-        String[] movieStrs = new String[movieArray.length()];
-        for (int i = 0; i < movieStrs.length; i++) {
+        Movie[] movies = new Movie[movieArray.length()];
+        for (int i = 0; i < movieArray.length(); i++) {
             JSONObject movieObject = movieArray.getJSONObject(i);
-            String temp = "id is: " + movieObject.getInt(MOVIE_ID)
-                    + "\n original title is: " + movieObject.getString(MOVIE_TITLE)
-                    + "\n synopsis: " + movieObject.getString(MOVIE_SYNOPSIS)
-                    + "\n rating is: " + movieObject.getDouble(MOVIE_RATING)
-                    + "\n release on: " + movieObject.getString(MOVIE_RELEASE)
-                    + "\n";
-            Log.v(LOG_TAG, "Each Movie Object: \n" + temp);
-            movieStrs[i] = temp;
+//            String temp = "id is: " + movieObject.getInt(MOVIE_ID)
+//                    + "\n original title is: " + movieObject.getString(MOVIE_TITLE)
+//                    + "\n synopsis: " + movieObject.getString(MOVIE_SYNOPSIS)
+//                    + "\n rating is: " + movieObject.getDouble(MOVIE_RATING)
+//                    + "\n release on: " + movieObject.getString(MOVIE_RELEASE)
+//                    + "\n";
+//            Log.v(LOG_TAG, "Each Movie Object: \n" + temp);
+            int id = movieObject.getInt(MOVIE_ID);
+            String title = movieObject.getString(MOVIE_TITLE);
+            String imagePath = IMAGE_PATH_BASE + DEFAULT_SIZE + movieObject.getString(IMAGE_PATH);
+//            Log.v(LOG_TAG, "image path: " + imagePath);
+            String synopsis = movieObject.getString(MOVIE_SYNOPSIS);
+            double rating = movieObject.getDouble(MOVIE_RATING);
+            String releaseDate = movieObject.getString(MOVIE_RELEASE);
+            movies[i] = new Movie(id, title, imagePath, synopsis, rating, releaseDate);
         }
-        return movieStrs;
+        return movies;
     }
     @Override
-    protected String[] doInBackground(String... params) {
+    protected Movie[] doInBackground(String... params) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String movieJsonStr = null;
-        String apikey = "";
         try {
             final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
             final String SORT_PARAM = "sort_by";
             final String APIID_PARAM = "api_key";
             Uri buildUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
                     .appendQueryParameter(SORT_PARAM, params[0])
-                    .appendQueryParameter(APIID_PARAM, apikey)
+                    .appendQueryParameter(APIID_PARAM, BuildConfig.POPULAR_MOVIES_API_KEY)
                     .build();
             URL url = new URL(buildUri.toString());
             //Log.v(LOG_TAG, "Build URI " + buildUri.toString());
@@ -105,10 +113,12 @@ public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
     }
 
     @Override
-    protected void onPostExecute(String[] result) {
+    protected void onPostExecute(Movie[] result) {
         if(result != null) {
-
-            // adapter.add()
+            MoviePosterMainFragment.imageAdapter.clear();
+            for (Movie elem : result) {
+                MoviePosterMainFragment.imageAdapter.add(elem);
+            }
         }
     }
 }

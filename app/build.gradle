@@ -20,6 +20,9 @@ android {
     repositories {
         mavenCentral()
     }
+    buildTypes.each{
+        it.buildConfigField 'String', 'POPULAR_MOVIES_API_KEY', MyPopularMoviesApiKey
+    }
 }
 
 dependencies {

@@ -64,7 +64,7 @@ public class MovieDetailActivity extends ActionBarActivity {
             ImageView movieDetailView = (ImageView) rootView.findViewById(R.id.movie_detail);
             Movie movieDetail = getActivity().getIntent().getParcelableExtra("movie");
             if (movieDetail != null) {
-                Picasso.with(getActivity()).load(movieDetail.imageResourceId).into(movieDetailView);
+                Picasso.with(getActivity()).load(movieDetail.imagePath).into(movieDetailView);
             }
 
             return rootView;

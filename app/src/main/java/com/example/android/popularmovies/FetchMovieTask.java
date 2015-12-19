@@ -4,6 +4,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,11 +18,35 @@ import java.net.URL;
 /**
  * Created by qlzh727 on 12/18/15.
  */
-public class FetchMovieTask extends AsyncTask<String, Void, Void> {
+public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
+    private String[] getMovieDataFromJson(String movieJsonStr) throws JSONException {
+        final String MOVIE_LIST = "results";
+        final String MOVIE_ID = "id";
+        final String MOVIE_TITLE = "original_title";
+        final String MOVIE_SYNOPSIS = "overview";
+        final String MOVIE_RATING = "vote_average";
+        final String MOVIE_RELEASE = "release_date";
+        final String IMAGE_PATH = "poster_path";
+        JSONObject movieJson = new JSONObject(movieJsonStr);
+        JSONArray movieArray = movieJson.getJSONArray(MOVIE_LIST);
+        String[] movieStrs = new String[movieArray.length()];
+        for (int i = 0; i < movieStrs.length; i++) {
+            JSONObject movieObject = movieArray.getJSONObject(i);
+            String temp = "id is: " + movieObject.getInt(MOVIE_ID)
+                    + "\n original title is: " + movieObject.getString(MOVIE_TITLE)
+                    + "\n synopsis: " + movieObject.getString(MOVIE_SYNOPSIS)
+                    + "\n rating is: " + movieObject.getDouble(MOVIE_RATING)
+                    + "\n release on: " + movieObject.getString(MOVIE_RELEASE)
+                    + "\n";
+            Log.v(LOG_TAG, "Each Movie Object: \n" + temp);
+            movieStrs[i] = temp;
+        }
+        return movieStrs;
+    }
     @Override
-    protected Void doInBackground(String... params) {
+    protected String[] doInBackground(String... params) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String movieJsonStr = null;
@@ -32,7 +60,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
                     .appendQueryParameter(APIID_PARAM, apikey)
                     .build();
             URL url = new URL(buildUri.toString());
-            Log.v(LOG_TAG, "Build URI " + buildUri.toString());
+            //Log.v(LOG_TAG, "Build URI " + buildUri.toString());
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -51,6 +79,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
                 return null;
             }
             movieJsonStr = buffer.toString();
+            //Log.v(LOG_TAG, "check origianl Json: "+movieJsonStr);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error", e);
             return null;
@@ -66,6 +95,20 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
                 }
             }
         }
+        try {
+            return getMovieDataFromJson(movieJsonStr);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
+        }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(String[] result) {
+        if(result != null) {
+
+            // adapter.add()
+        }
     }
 }

@@ -38,7 +38,8 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
             JSONObject movieObject = movieArray.getJSONObject(i);
             int id = movieObject.getInt(MOVIE_ID);
             String title = movieObject.getString(MOVIE_TITLE);
-            String imagePath = IMAGE_PATH_BASE + DEFAULT_SIZE + movieObject.getString(IMAGE_PATH);
+            String imagePath = movieObject.getString(IMAGE_PATH);
+            imagePath = imagePath.equals("null") ? null : IMAGE_PATH_BASE + DEFAULT_SIZE + imagePath;
             String synopsis = movieObject.getString(MOVIE_SYNOPSIS);
             double rating = movieObject.getDouble(MOVIE_RATING);
             String releaseDate = movieObject.getString(MOVIE_RELEASE);

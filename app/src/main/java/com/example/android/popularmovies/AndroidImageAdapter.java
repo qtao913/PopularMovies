@@ -43,9 +43,9 @@ public class AndroidImageAdapter extends ArrayAdapter<Movie> {
         Movie currentMovie = getItem(position);
         Picasso.with(currentActivity).setDebugging(true);
         if (currentMovie.imagePath == null) {
-            Picasso.with(currentActivity).load(R.drawable.image_place_holder).resize(185, 252).into(currentHolder.movieItemView);
+            Picasso.with(currentActivity).load(R.drawable.image_place_holder).fit().into(currentHolder.movieItemView);
         } else {
-            Picasso.with(currentActivity).load(currentMovie.imagePath).into(currentHolder.movieItemView);
+            Picasso.with(currentActivity).load(currentMovie.imagePath).fit().into(currentHolder.movieItemView);
         }
         return itemView;
     }

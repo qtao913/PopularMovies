@@ -1,5 +1,6 @@
 package com.example.android.popularmovies.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
@@ -57,34 +58,34 @@ public class TestDb extends AndroidTestCase {
         db.close();
     }
 
-//    public void testMovieTable() {
-//        insertMovie();
-//    }
+    public void testMovieTable() {
+        insertMovie();
+    }
 
-//    public long insertMovie() {
-//        MovieDbHelper dbHelper = new MovieDbHelper(mContext);
-//        SQLiteDatabase db = dbHelper.getWritableDatabase();
-//
-//        ContentValues testValues = TestUtilities.createMovieValues();
-//        long movieRowId = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, testValues);
-//        assertTrue(movieRowId != -1);
-//
-//        // pull out the information by querying database and receiving a cursor back
-//        Cursor cursor = db.query(
-//                MovieContract.MovieEntry.TABLE_NAME,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null
-//        );
-//
-//        assertTrue("Error: no record returned from movie query", cursor.moveToFirst());
-//        TestUtilities.validateCurrentRecord("Error: Movie Query Validation Failed", cursor, testValues);
-//        assertFalse("Error: more than one record returned from this query", cursor.moveToNext());
-//        cursor.close();
-//        db.close();
-//        return movieRowId;
-//    }
+    public long insertMovie() {
+        MovieDbHelper dbHelper = new MovieDbHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues testValues = TestUtilities.createMovieValues();
+        long movieRowId = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, testValues);
+        assertTrue(movieRowId != -1);
+
+        // pull out the information by querying database and receiving a cursor back
+        Cursor cursor = db.query(
+                MovieContract.MovieEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        assertTrue("Error: no record returned from movie query", cursor.moveToFirst());
+        TestUtilities.validateCurrentRecord("Error: Movie Query Validation Failed", cursor, testValues);
+        assertFalse("Error: more than one record returned from this query", cursor.moveToNext());
+        cursor.close();
+        db.close();
+        return movieRowId;
+    }
 }

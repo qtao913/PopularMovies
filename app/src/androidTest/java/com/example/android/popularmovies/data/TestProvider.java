@@ -1,8 +1,11 @@
 package com.example.android.popularmovies.data;
 
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 
 /**
@@ -27,5 +30,30 @@ public class TestProvider extends AndroidTestCase {
             assertTrue("Error: MovieProvider is not registered at " + mContext.getPackageName(),
                     false);
         }
+    }
+
+    public void testGetType() {
+        //content://com.example.android.popularmovies/movie
+        String type = mContext.getContentResolver().getType(MovieContract.MovieEntry.CONTENT_URI);
+        //vnd.android.cursor.dir/com.example.android.popularmovies/movie
+        assertEquals("Error: returned type is incorrect, should be MovieEntry.CONTENT_TYPE",
+                MovieContract.MovieEntry.CONTENT_TYPE, type);
+    }
+
+    public void testBasicMovieQuery() {
+        MovieDbHelper dbHelper = new MovieDbHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues testValues = TestUtilities.createMovieValues();
+        long movieRowId = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, testValues);
+        assertTrue("Fail to insert to the movie table", movieRowId != -1);
+        db.close();
+        Cursor movieCursor = mContext.getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        TestUtilities.validateCursor("testBasicMovieQuery", movieCursor, testValues);
     }
 }

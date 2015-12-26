@@ -23,6 +23,12 @@ public class TestUtilities extends AndroidTestCase {
                     entryValue + "'. " + error, entryValue, valueCursor.getString(idx));
         }
     }
+
+    static void validateCursor(String error, Cursor valueCursor, ContentValues expectedValues) {
+        assertTrue("Empty cursor returned. " + error, valueCursor.moveToFirst());
+        validateCurrentRecord(error, valueCursor, expectedValues);
+        valueCursor.close();
+    }
     // create default movie values for test
     static ContentValues createMovieValues() {
         ContentValues movieValues = new ContentValues();

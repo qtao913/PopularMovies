@@ -11,6 +11,8 @@ import android.net.Uri;
  */
 public class MovieProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
+    private MovieDbHelper movieDbHelper;
+
     static final int MOVIE = 100;
 
     static UriMatcher buildUriMatcher() {
@@ -22,17 +24,41 @@ public class MovieProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        return false;
+        this.movieDbHelper = new MovieDbHelper(getContext());
+        return true;
     }
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+        Cursor retCursor;
+        switch (sUriMatcher.match(uri)) {
+            case MOVIE:
+                retCursor = movieDbHelper.getReadableDatabase().query(
+                        MovieContract.MovieEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return retCursor;
     }
 
     @Override
     public String getType(Uri uri) {
-        return null;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case MOVIE:
+                return MovieContract.MovieEntry.CONTENT_TYPE;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
     }
 
     @Override

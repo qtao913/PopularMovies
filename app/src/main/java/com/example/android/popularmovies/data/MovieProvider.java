@@ -14,11 +14,13 @@ public class MovieProvider extends ContentProvider {
     private MovieDbHelper movieDbHelper;
 
     static final int MOVIE = 100;
+    static final int MOVIE_ITEM = 101;
 
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MovieContract.CONTENT_AUTHORITY;
         matcher.addURI(authority, MovieContract.PATH_MOVIE, MOVIE);
+        matcher.addURI(authority, MovieContract.PATH_MOVIE + "/#", MOVIE_ITEM);
         return matcher;
     }
 
@@ -43,6 +45,9 @@ public class MovieProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
+            case MOVIE_ITEM:
+                retCursor = getMovieItem(uri, projection, sortOrder);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -50,12 +55,29 @@ public class MovieProvider extends ContentProvider {
         return retCursor;
     }
 
+    private Cursor getMovieItem(Uri uri, String[] projection, String sortOrder) {
+        String movieRowId = MovieContract.getMovieRowRecord(uri);
+        String selection = MovieContract.MovieEntry._ID + " = ? ";
+        String[] selectionArgs = {movieRowId};
+        Cursor result = movieDbHelper.getReadableDatabase().query(
+                MovieContract.MovieEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+        return result;
+    }
     @Override
     public String getType(Uri uri) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case MOVIE:
                 return MovieContract.MovieEntry.CONTENT_TYPE;
+            case MOVIE_ITEM:
+                return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -63,6 +85,21 @@ public class MovieProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
+//        final SQLiteDatabase db = movieDbHelper.getWritableDatabase();
+//        Uri returnUri;
+//        switch (sUriMatcher.match(uri)){
+//            case MOVIE:
+//                long _id = db.insert(MovieContract.MovieEntry.TABLE_NAME,null,values);
+//                if (_id > 0)
+//                    returnUri = MovieContract.MovieEntry.buildMovieUri(_id);
+//                else
+//                    throw new SQLException("Failed to insert row into " + uri);
+//                break;
+//            default:
+//                throw new UnsupportedOperationException("Unknown uri: " + uri);
+//        }
+//        getContext().getContentResolver().notifyChange(uri,null);
+//        return returnUri;
         return null;
     }
 

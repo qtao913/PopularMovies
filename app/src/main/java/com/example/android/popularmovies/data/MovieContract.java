@@ -47,5 +47,8 @@ public class MovieContract {
         public static final String COLUMN_URL = "trailer_url";
     }
 
+    public static String getMovieRowRecord(Uri uri) {
+        return uri.getLastPathSegment();
+    }
 
 }

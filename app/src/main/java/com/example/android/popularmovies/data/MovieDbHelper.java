@@ -39,6 +39,6 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         //db.execSQL("DROP TABLE IF EXISTS " + MovieEntry.TABLE_NAME);
         //In case of database schema changes, ALTER table should be used
         //as the old table contains user favourite movies which we can't simply discard
-        onCreate(db);
+        //onCreate(db);
     }
 }

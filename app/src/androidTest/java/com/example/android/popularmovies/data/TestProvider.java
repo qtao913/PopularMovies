@@ -1,6 +1,7 @@
 package com.example.android.popularmovies.data;
 
 import android.content.ComponentName;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
@@ -122,6 +123,7 @@ public class TestProvider extends AndroidTestCase {
         TestUtilities.TestContentObserver tco = TestUtilities.getTestContentObserver();
         mContext.getContentResolver().registerContentObserver(MovieContract.MovieEntry.CONTENT_URI, true, tco);
         Uri addedRow = mContext.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, testValues);
+        assertTrue(ContentUris.parseId(addedRow) != -1);
         tco.waitForNotificationOrFail();
         mContext.getContentResolver().unregisterContentObserver(tco);
         Cursor cursorAfterInsertion = mContext.getContentResolver().query(
@@ -179,5 +181,51 @@ public class TestProvider extends AndroidTestCase {
         assertEquals("Error: records from table are not deleted completely", 0, c.getCount()-rowsDeleted);
         mContext.getContentResolver().unregisterContentObserver(tco);
         c.close();
+    }
+
+    public void testUpdateMovie() {
+        ContentValues testValues = TestUtilities.createMovieValuesSetOne();
+        Uri itemUri = mContext.getContentResolver().insert(
+                MovieContract.MovieEntry.CONTENT_URI,testValues
+        );
+        long itemRowId = ContentUris.parseId(itemUri);
+        assertTrue(itemRowId != -1);
+        String rowId = MovieContract.getMovieRowRecord(itemUri);
+
+        Cursor beforeUpdate = mContext.getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        TestUtilities.TestContentObserver tco = TestUtilities.getTestContentObserver();
+        beforeUpdate.registerContentObserver(tco);
+
+        ContentValues updatedValues = new ContentValues(testValues);
+        updatedValues.put(MovieContract.MovieEntry._ID, itemRowId);
+        updatedValues.put(MovieContract.MovieEntry.COLUMN_FAVORITE, 1);
+
+        int countUpdate = mContext.getContentResolver().update(
+                MovieContract.MovieEntry.CONTENT_URI,
+                updatedValues,
+                MovieContract.MovieEntry._ID + " = ? ",
+                new String[] {rowId}
+        );
+        assertEquals(countUpdate, 1);
+        // check whether observer is notified
+        tco.waitForNotificationOrFail();
+        beforeUpdate.unregisterContentObserver(tco);
+        beforeUpdate.close();
+
+        Cursor afterUpdate = mContext.getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                MovieContract.MovieEntry._ID + " = ? ",
+                new String[] {rowId},
+                null
+        );
+        TestUtilities.validateCursor("Error: Update wrong information", afterUpdate, updatedValues);
+        afterUpdate.close();
     }
 }

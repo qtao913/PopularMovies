@@ -57,6 +57,8 @@ public class TestProvider extends AndroidTestCase {
                 MovieContract.MovieEntry.CONTENT_ITEM_TYPE, itemType);
     }
 
+    // at this stage, contentResolver().insert() is not coded,
+    // therefore, directly insert test values to the db by calling the db.insert();
     public void testBasicMovieQuery() {
         MovieDbHelper dbHelper = new MovieDbHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -97,18 +99,21 @@ public class TestProvider extends AndroidTestCase {
         TestUtilities.validateCursor("testSingleMovieItem", movieCursor, testValues);
     }
 
-//    public void testMovieInsert() {
-//        MovieDbHelper dbHelper = new MovieDbHelper(mContext);
-//        ContentValues testValues = TestUtilities.createMovieValuesSetOne();
-//        Uri addedRow = mContext.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, testValues);
-//        Cursor cursorAfterInsertion = mContext.getContentResolver().query(
-//                addedRow,
-//                null,
-//                null,
-//                null,
-//                null
-//        );
-//        TestUtilities.validateCursor("testMovieInsert", cursorAfterInsertion, testValues);
-//
-//    }
+    public void testMovieInsert() {
+        ContentValues testValues = TestUtilities.createMovieValuesSetOne();
+        // Register a content observer for insert.
+        TestUtilities.TestContentObserver tco = TestUtilities.getTestContentObserver();
+        mContext.getContentResolver().registerContentObserver(MovieContract.MovieEntry.CONTENT_URI, true, tco);
+        Uri addedRow = mContext.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, testValues);
+        tco.waitForNotificationOrFail();
+        mContext.getContentResolver().unregisterContentObserver(tco);
+        Cursor cursorAfterInsertion = mContext.getContentResolver().query(
+                addedRow,
+                null,
+                null,
+                null,
+                null
+        );
+        TestUtilities.validateCursor("testMovieInsert", cursorAfterInsertion, testValues);
+    }
 }

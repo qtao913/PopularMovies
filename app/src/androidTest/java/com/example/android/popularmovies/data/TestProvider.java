@@ -116,4 +116,51 @@ public class TestProvider extends AndroidTestCase {
         );
         TestUtilities.validateCursor("testMovieInsert", cursorAfterInsertion, testValues);
     }
+
+    public void testMovieDeletion() {
+        ContentValues setOne = TestUtilities.createMovieValuesSetOne();
+        ContentValues setTwo = TestUtilities.createMovieValuesSetTwo();
+        mContext.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, setOne);
+        mContext.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, setTwo);
+        TestUtilities.TestContentObserver tco = TestUtilities.getTestContentObserver();
+        mContext.getContentResolver().registerContentObserver(MovieContract.MovieEntry.CONTENT_URI, true, tco);
+        // test deleting rows where isFavourite == false
+        // setOne has isFav == false; setTwo has isFav == true
+        String selection = MovieContract.MovieEntry.COLUMN_FAVORITE + " = ? ";
+        String[] selectionArgs = {"0"};
+        int rowsDeleted = mContext.getContentResolver().delete(
+                MovieContract.MovieEntry.CONTENT_URI,
+                selection,
+                selectionArgs);
+        tco.waitForNotificationOrFail();
+        assertEquals("Error: Incorrect number of rows are deleted.", 1, rowsDeleted);
+        //query the database, should get a record of setTwo
+        Cursor c = mContext.getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        TestUtilities.validateCursor("testMovieDelete", c, setTwo);
+        // delete all the record
+        mContext.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, setOne);
+        c = mContext.getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        assertEquals("Error wrong insertion", 2, c.getCount());
+        rowsDeleted = mContext.getContentResolver().delete(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                null
+        );
+        tco.waitForNotificationOrFail();
+        assertEquals("Error: records from table are not deleted completely", 0, c.getCount()-rowsDeleted);
+        mContext.getContentResolver().unregisterContentObserver(tco);
+        c.close();
+    }
 }

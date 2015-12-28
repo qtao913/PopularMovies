@@ -18,11 +18,28 @@ public class TestProvider extends AndroidTestCase {
 
     @Override
     public void setUp() {
-        MovieDbHelper dbHelper = new MovieDbHelper(mContext);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete(MovieContract.MovieEntry.TABLE_NAME, null, null);
-        Cursor c = db.query(MovieContract.MovieEntry.TABLE_NAME, null, null, null, null, null, null);
-        assertEquals("Error: Records not deleted from Movie", 0, c.getCount());
+        deleteAllRecordsFromProvider();
+    }
+
+    public void deleteAllRecordsFromProvider() {
+        mContext.getContentResolver().delete(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                null
+        );
+        Cursor c = mContext.getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        assertEquals("Error: Records in Movie table are not deleted completely", 0, c.getCount());
+        c.close();
+    }
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
     }
 
     // test the content provider is registered correctly.

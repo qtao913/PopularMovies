@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by qlzh727 on 12/18/15.
@@ -73,6 +74,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
     }
 
     private Movie[] getMovieDataFromJson(String movieJsonStr) throws JSONException {
+        // Movie General Information
         final String MOVIE_LIST = "results";
         final String MOVIE_ID = "id";
         final String MOVIE_TITLE = "original_title";
@@ -82,21 +84,60 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
         final String IMAGE_PATH = "poster_path";
         final String IMAGE_PATH_BASE = "http://image.tmdb.org/t/p/";
         final String DEFAULT_SIZE = "w185/";
-        JSONObject movieJson = new JSONObject(movieJsonStr);
-        JSONArray movieArray = movieJson.getJSONArray(MOVIE_LIST);
-        Movie[] movies = new Movie[movieArray.length()];
-        for (int i = 0; i < movieArray.length(); i++) {
-            JSONObject movieObject = movieArray.getJSONObject(i);
-            int id = movieObject.getInt(MOVIE_ID);
-            String title = movieObject.getString(MOVIE_TITLE);
-            String imagePath = movieObject.getString(IMAGE_PATH);
-            imagePath = imagePath.equals("null") ? null : IMAGE_PATH_BASE + DEFAULT_SIZE + imagePath;
-            String synopsis = movieObject.getString(MOVIE_SYNOPSIS);
-            double rating = movieObject.getDouble(MOVIE_RATING);
-            String releaseDate = movieObject.getString(MOVIE_RELEASE);
-            movies[i] = new Movie(id, title, imagePath, synopsis, rating, releaseDate);
+        try {
+            JSONObject movieJson = new JSONObject(movieJsonStr);
+            JSONArray movieArray = movieJson.getJSONArray(MOVIE_LIST);
+            ContentValues[] moviesForDatabase = new ContentValues[movieArray.length()];
+            for (int i = 0; i < movieArray.length(); i++) {
+                JSONObject movieObject = movieArray.getJSONObject(i);
+                int id = movieObject.getInt(MOVIE_ID);
+                String title = movieObject.getString(MOVIE_TITLE);
+                String imagePath = movieObject.getString(IMAGE_PATH);
+                imagePath = imagePath.equals("null") ? null : IMAGE_PATH_BASE + DEFAULT_SIZE + imagePath;
+                String synopsis = movieObject.getString(MOVIE_SYNOPSIS);
+                double rating = movieObject.getDouble(MOVIE_RATING);
+                String releaseDate = movieObject.getString(MOVIE_RELEASE);
+                // build up the content value for database insertion
+                ContentValues movieItem = new ContentValues();
+                movieItem.put(MovieEntry.COLUMN_MID, id);
+                movieItem.put(MovieEntry.COLUMN_TITLE, title);
+                movieItem.put(MovieEntry.COLUMN_SYNOPSIS, synopsis);
+                movieItem.put(MovieEntry.COLUMN_RATING, rating);
+                movieItem.put(MovieEntry.COLUMN_RELEASE, releaseDate);
+                movieItem.put(MovieEntry.COLUMN_IMAGE_URL, imagePath);
+                movieItem.put(MovieEntry.COLUMN_FAVORITE, IS_NOT_FAVORITE);
+                moviesForDatabase[i] = movieItem;
+            }
+            if (moviesForDatabase.length > 0) {
+                mContext.getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, moviesForDatabase);
+            }
+            Cursor cursor = mContext.getContentResolver().query(
+                    MovieEntry.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+
+            ArrayList<Movie> movieList = new ArrayList<>();
+            if (cursor.moveToFirst()) {
+                do {
+                    int id = cursor.getInt(cursor.getColumnIndex(MovieEntry.COLUMN_MID));
+                    String title = cursor.getString(cursor.getColumnIndex(MovieEntry.COLUMN_TITLE));
+                    String imagePath = cursor.getString(cursor.getColumnIndex(MovieEntry.COLUMN_IMAGE_URL));
+                    String synopsis = cursor.getString(cursor.getColumnIndex(MovieEntry.COLUMN_SYNOPSIS));
+                    double rating = cursor.getDouble(cursor.getColumnIndex(MovieEntry.COLUMN_RATING));
+                    String releaseDate = cursor.getString(cursor.getColumnIndex(MovieEntry.COLUMN_RELEASE));
+                    movieList.add(new Movie(id, title, imagePath, synopsis, rating, releaseDate));
+                } while (cursor.moveToNext());
+            }
+            return movieList.toArray(new Movie[cursor.getCount()]);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
         }
-        return movies;
+        return null;
     }
     @Override
     protected Movie[] doInBackground(String... params) {

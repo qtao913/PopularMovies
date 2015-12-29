@@ -59,7 +59,7 @@ public class MoviePosterMainFragment extends Fragment {
     }
 
     private void updateMovie(){
-        FetchMovieTask fetchMovieTask = new FetchMovieTask();
+        FetchMovieTask fetchMovieTask = new FetchMovieTask(getActivity(), imageAdapter);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortingPref = prefs.getString(getString(R.string.sorting_preference_key),
                 getString(R.string.most_popular_value));

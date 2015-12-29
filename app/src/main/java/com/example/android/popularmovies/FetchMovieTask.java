@@ -1,8 +1,14 @@
 package com.example.android.popularmovies;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.android.popularmovies.data.MovieContract.MovieEntry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +26,51 @@ import java.net.URL;
  */
 public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
+    public static final int IS_FAVORITE = 1;
+    public static final int IS_NOT_FAVORITE = 0;
+
+    private AndroidImageAdapter imageAdapter;
+    private final Context mContext;
+
+    public FetchMovieTask(Context context, AndroidImageAdapter imageAdapter) {
+        mContext = context;
+        imageAdapter = imageAdapter;
+    }
+
+    // handle insertion of a new Movie record in the Movie database
+    // return the row ID of the added movie item
+    long addMovie(int movieId, String title, String synopsis,
+                  double rating, String releaseDate, String imageUrl) {
+        long rowId;
+        Cursor movieCursor = mContext.getContentResolver().query(
+                MovieEntry.CONTENT_URI,
+                new String[] {MovieEntry._ID},
+                MovieEntry.COLUMN_MID + " = ? ",
+                new String[] {Integer.toString(movieId)},
+                null
+        );
+        if (movieCursor.moveToFirst()) {
+            int rowIdIndex = movieCursor.getColumnIndex(MovieEntry._ID);
+            rowId = movieCursor.getLong(rowIdIndex);
+        } else {
+            // record is not stored in the database yet
+            ContentValues movieValues = new ContentValues();
+            movieValues.put(MovieEntry.COLUMN_MID, movieId);
+            movieValues.put(MovieEntry.COLUMN_TITLE, title);
+            movieValues.put(MovieEntry.COLUMN_SYNOPSIS, synopsis);
+            movieValues.put(MovieEntry.COLUMN_RATING, rating);
+            movieValues.put(MovieEntry.COLUMN_RELEASE, releaseDate);
+            movieValues.put(MovieEntry.COLUMN_IMAGE_URL, imageUrl);
+            movieValues.put(MovieEntry.COLUMN_FAVORITE, IS_NOT_FAVORITE);
+
+            Uri insertedUri = mContext.getContentResolver().insert(
+                    MovieEntry.CONTENT_URI,
+                    movieValues
+            );
+            rowId = ContentUris.parseId(insertedUri);
+        }
+        return rowId;
+    }
 
     private Movie[] getMovieDataFromJson(String movieJsonStr) throws JSONException {
         final String MOVIE_LIST = "results";

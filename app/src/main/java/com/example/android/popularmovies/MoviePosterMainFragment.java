@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MoviePosterMainFragment extends Fragment {
-    public static AndroidImageAdapter imageAdapter;
+    public AndroidImageAdapter imageAdapter;
     private ArrayList<Movie> movieList;
     public MoviePosterMainFragment() {
     }

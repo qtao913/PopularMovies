@@ -35,7 +35,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
 
     public FetchMovieTask(Context context, AndroidImageAdapter imageAdapter) {
         mContext = context;
-        imageAdapter = imageAdapter;
+        this.imageAdapter = imageAdapter;
     }
 
     // handle insertion of a new Movie record in the Movie database
@@ -113,7 +113,6 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
             }
             Cursor cursor = mContext.getContentResolver().query(
                     MovieEntry.CONTENT_URI,
-                    null,
                     null,
                     null,
                     null,
@@ -199,9 +198,9 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
     @Override
     protected void onPostExecute(Movie[] result) {
         if(result != null) {
-            MoviePosterMainFragment.imageAdapter.clear();
+            imageAdapter.clear();
             for (Movie elem : result) {
-                MoviePosterMainFragment.imageAdapter.add(elem);
+                imageAdapter.add(elem);
             }
         }
     }

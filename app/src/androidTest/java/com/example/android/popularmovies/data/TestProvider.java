@@ -228,4 +228,29 @@ public class TestProvider extends AndroidTestCase {
         TestUtilities.validateCursor("Error: Update wrong information", afterUpdate, updatedValues);
         afterUpdate.close();
     }
+
+    public void testBulkInsert() {
+        ContentValues[] bulkValues = new ContentValues[2];
+        bulkValues[0] = TestUtilities.createMovieValuesSetOne();
+        bulkValues[1] = TestUtilities.createMovieValuesSetTwo();
+        TestUtilities.TestContentObserver tco = TestUtilities.getTestContentObserver();
+        mContext.getContentResolver().registerContentObserver(MovieContract.MovieEntry.CONTENT_URI, true, tco);
+        int count = mContext.getContentResolver().bulkInsert(MovieContract.MovieEntry.CONTENT_URI, bulkValues);
+        tco.waitForNotificationOrFail();
+        mContext.getContentResolver().unregisterContentObserver(tco);
+        assertEquals(count, bulkValues.length);
+
+        Cursor c = mContext.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null);
+        assertEquals(c.getCount(), bulkValues.length);
+        c.moveToFirst();
+        for (int i = 0; i < bulkValues.length; i++, c.moveToNext()) {
+            TestUtilities.validateCurrentRecord("Error: bulk insert is incorrect at entry: " + i,
+                    c, bulkValues[i]);
+        }
+        c.close();
+    }
 }

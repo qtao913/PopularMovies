@@ -145,8 +145,8 @@ public class TestProvider extends AndroidTestCase {
         mContext.getContentResolver().registerContentObserver(MovieContract.MovieEntry.CONTENT_URI, true, tco);
         // test deleting rows where isFavourite == false
         // setOne has isFav == false; setTwo has isFav == true
-        String selection = MovieContract.MovieEntry.COLUMN_FAVORITE + " = ? ";
-        String[] selectionArgs = {"0"};
+        String selection = MovieContract.MovieEntry.COLUMN_MID + " = ? ";
+        String[] selectionArgs = {"140607"};
         int rowsDeleted = mContext.getContentResolver().delete(
                 MovieContract.MovieEntry.CONTENT_URI,
                 selection,
@@ -204,7 +204,6 @@ public class TestProvider extends AndroidTestCase {
 
         ContentValues updatedValues = new ContentValues(testValues);
         updatedValues.put(MovieContract.MovieEntry._ID, itemRowId);
-        updatedValues.put(MovieContract.MovieEntry.COLUMN_FAVORITE, 1);
 
         int countUpdate = mContext.getContentResolver().update(
                 MovieContract.MovieEntry.CONTENT_URI,

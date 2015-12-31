@@ -27,8 +27,6 @@ import java.util.ArrayList;
  */
 public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
-    public static final int IS_FAVORITE = 1;
-    public static final int IS_NOT_FAVORITE = 0;
 
     private AndroidImageAdapter imageAdapter;
     private final Context mContext;
@@ -62,7 +60,6 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
             movieValues.put(MovieEntry.COLUMN_RATING, rating);
             movieValues.put(MovieEntry.COLUMN_RELEASE, releaseDate);
             movieValues.put(MovieEntry.COLUMN_IMAGE_URL, imageUrl);
-            movieValues.put(MovieEntry.COLUMN_FAVORITE, IS_NOT_FAVORITE);
 
             Uri insertedUri = mContext.getContentResolver().insert(
                     MovieEntry.CONTENT_URI,
@@ -105,9 +102,15 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                 movieItem.put(MovieEntry.COLUMN_RATING, rating);
                 movieItem.put(MovieEntry.COLUMN_RELEASE, releaseDate);
                 movieItem.put(MovieEntry.COLUMN_IMAGE_URL, imagePath);
-                movieItem.put(MovieEntry.COLUMN_FAVORITE, IS_NOT_FAVORITE);
                 moviesForDatabase[i] = movieItem;
             }
+            // delete movies before adding new bulk data
+            mContext.getContentResolver().delete(
+                    MovieEntry.CONTENT_URI,
+                    null,
+                    null
+            );
+
             if (moviesForDatabase.length > 0) {
                 mContext.getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, moviesForDatabase);
             }

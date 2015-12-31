@@ -49,7 +49,6 @@ public class TestFetchMovieTask extends AndroidTestCase {
             assertEquals("Error: wrong rating", movieCursor.getDouble(4), ADD_RATING);
             assertEquals("Error: wrong release date", movieCursor.getString(5), ADD_REALEASE);
             assertEquals("Error: wrong image URL", movieCursor.getString(6), ADD_IMAGE_URL);
-            assertEquals("Error: wrong setting on isFavourite", movieCursor.getInt(7), FetchMovieTask.IS_NOT_FAVORITE);
         } else {
             fail("Empty cursor returned by querying with the ADD_MID");
         }

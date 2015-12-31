@@ -47,7 +47,6 @@ public class TestUtilities extends AndroidTestCase {
         movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE, "2015-12-18");
         movieValues.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL,
                 "http://image.tmdb.org/t/p/w185//fYzpM9GmpBlIC893fNjoWCwE24H.jpg");
-        movieValues.put(MovieContract.MovieEntry.COLUMN_FAVORITE, 0);
         return movieValues;
     }
 
@@ -61,7 +60,6 @@ public class TestUtilities extends AndroidTestCase {
         movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE, "2012-06-01");
         movieValues.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL,
                 "http://image.tmdb.org/t/p/w185//jcVhomttAiaeabeK30luUQeAlzd.jpg");
-        movieValues.put(MovieContract.MovieEntry.COLUMN_FAVORITE, 1);
         return movieValues;
     }
 

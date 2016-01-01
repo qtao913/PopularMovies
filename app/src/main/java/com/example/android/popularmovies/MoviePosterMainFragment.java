@@ -2,6 +2,7 @@ package com.example.android.popularmovies;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -14,23 +15,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.android.popularmovies.data.MovieContract;
 
 public class MoviePosterMainFragment extends Fragment {
     public AndroidImageAdapter imageAdapter;
-    private ArrayList<Movie> movieList;
     public MoviePosterMainFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState == null || !savedInstanceState.containsKey("movie")) {
-            movieList = new ArrayList<>();
-        } else {
-            movieList = savedInstanceState.getParcelableArrayList("movie");
-        }
+//        if(savedInstanceState == null || !savedInstanceState.containsKey("movie")) {
+//            movieList = new ArrayList<>();
+//        } else {
+//            movieList = savedInstanceState.getParcelableArrayList("movie");
+//        }
         setHasOptionsMenu(true);
     }
 
@@ -59,7 +58,7 @@ public class MoviePosterMainFragment extends Fragment {
     }
 
     private void updateMovie(){
-        FetchMovieTask fetchMovieTask = new FetchMovieTask(getActivity(), imageAdapter);
+        FetchMovieTask fetchMovieTask = new FetchMovieTask(getActivity());
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortingPref = prefs.getString(getString(R.string.sorting_preference_key),
                 getString(R.string.most_popular_value));
@@ -68,23 +67,27 @@ public class MoviePosterMainFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("movie", movieList);
+//        outState.putParcelableArrayList("movie", movieList);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
-
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        populateMovieListView(rootView, movieList);
+        populateMovieListView(rootView);
         return rootView;
     }
 
-    private void populateMovieListView(View rootView, List<Movie> movies) {
-        imageAdapter = new AndroidImageAdapter(getActivity(), movies);
+    private void populateMovieListView(View rootView) {
+        Cursor movieData = getActivity().getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        imageAdapter = new AndroidImageAdapter(getActivity(), movieData, 0);
         GridView movieGridView = (GridView) rootView.findViewById(R.id.grid_movie_view);
         movieGridView.setAdapter(imageAdapter);
         movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -92,7 +95,7 @@ public class MoviePosterMainFragment extends Fragment {
                                     int position, long id) {
                 Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
                 Bundle detail = new Bundle();
-                detail.putParcelable("movie", movieList.get(position));
+//                detail.putParcelable("movie", movieList.get(position));
                 intent.putExtras(detail);
                 startActivity(intent);
             }

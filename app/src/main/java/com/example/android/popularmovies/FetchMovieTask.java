@@ -20,20 +20,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * Created by qlzh727 on 12/18/15.
  */
-public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
+public class FetchMovieTask extends AsyncTask<String, Void, Void> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
-    private AndroidImageAdapter imageAdapter;
     private final Context mContext;
 
-    public FetchMovieTask(Context context, AndroidImageAdapter imageAdapter) {
+    public FetchMovieTask(Context context) {
         mContext = context;
-        this.imageAdapter = imageAdapter;
     }
 
     // handle insertion of a new Movie record in the Movie database
@@ -70,7 +67,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
         return rowId;
     }
 
-    private Movie[] getMovieDataFromJson(String movieJsonStr) throws JSONException {
+    private void getMovieDataFromJson(String movieJsonStr) throws JSONException {
         // Movie General Information
         final String MOVIE_LIST = "results";
         final String MOVIE_ID = "id";
@@ -110,39 +107,20 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                     null,
                     null
             );
-
+            int rowInserted = 0;
             if (moviesForDatabase.length > 0) {
-                mContext.getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, moviesForDatabase);
+                rowInserted = mContext.getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, moviesForDatabase);
+                Log.v(LOG_TAG, "Bulk insert: "+rowInserted);
             }
-            Cursor cursor = mContext.getContentResolver().query(
-                    MovieEntry.CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    null
-            );
 
-            ArrayList<Movie> movieList = new ArrayList<>();
-            if (cursor.moveToFirst()) {
-                do {
-                    int id = cursor.getInt(cursor.getColumnIndex(MovieEntry.COLUMN_MID));
-                    String title = cursor.getString(cursor.getColumnIndex(MovieEntry.COLUMN_TITLE));
-                    String imagePath = cursor.getString(cursor.getColumnIndex(MovieEntry.COLUMN_IMAGE_URL));
-                    String synopsis = cursor.getString(cursor.getColumnIndex(MovieEntry.COLUMN_SYNOPSIS));
-                    double rating = cursor.getDouble(cursor.getColumnIndex(MovieEntry.COLUMN_RATING));
-                    String releaseDate = cursor.getString(cursor.getColumnIndex(MovieEntry.COLUMN_RELEASE));
-                    movieList.add(new Movie(id, title, imagePath, synopsis, rating, releaseDate));
-                } while (cursor.moveToNext());
-            }
-            return movieList.toArray(new Movie[cursor.getCount()]);
+
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-        return null;
     }
     @Override
-    protected Movie[] doInBackground(String... params) {
+    protected Void doInBackground(String... params) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String movieJsonStr = null;
@@ -162,7 +140,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
             InputStream inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
-                return  null;
+                return null;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
@@ -173,10 +151,14 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                 return null;
             }
             movieJsonStr = buffer.toString();
-            //Log.v(LOG_TAG, "check origianl Json: "+movieJsonStr);
+            //Log.v(LOG_TAG, "check origianl Json: "+ movieJsonStr);
+            getMovieDataFromJson(movieJsonStr);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error", e);
             return null;
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -189,22 +171,8 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                 }
             }
         }
-        try {
-            return getMovieDataFromJson(movieJsonStr);
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-            e.printStackTrace();
-        }
+
         return null;
     }
 
-    @Override
-    protected void onPostExecute(Movie[] result) {
-        if(result != null) {
-            imageAdapter.clear();
-            for (Movie elem : result) {
-                imageAdapter.add(elem);
-            }
-        }
-    }
 }

@@ -24,7 +24,7 @@ public class TestFetchMovieTask extends AndroidTestCase {
                 MovieEntry.COLUMN_MID + " = ? ",
                 new String[] {Integer.toString(ADD_MID)}
         );
-        FetchMovieTask fetchMovieTask = new FetchMovieTask(getContext(), null);
+        FetchMovieTask fetchMovieTask = new FetchMovieTask(getContext());
         long rowId = fetchMovieTask.addMovie(
                 ADD_MID,
                 ADD_TITLE,

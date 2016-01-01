@@ -1,11 +1,16 @@
 package com.example.android.popularmovies;
 
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,20 +21,15 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.android.popularmovies.data.MovieContract;
-
-public class MoviePosterMainFragment extends Fragment {
+public class MoviePosterMainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     public AndroidImageAdapter imageAdapter;
+    private static final int MOVIE_LOADER = 0;
     public MoviePosterMainFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if(savedInstanceState == null || !savedInstanceState.containsKey("movie")) {
-//            movieList = new ArrayList<>();
-//        } else {
-//            movieList = savedInstanceState.getParcelableArrayList("movie");
-//        }
         setHasOptionsMenu(true);
     }
 
@@ -67,7 +67,6 @@ public class MoviePosterMainFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-//        outState.putParcelableArrayList("movie", movieList);
         super.onSaveInstanceState(outState);
     }
 
@@ -80,14 +79,7 @@ public class MoviePosterMainFragment extends Fragment {
     }
 
     private void populateMovieListView(View rootView) {
-        Cursor movieData = getActivity().getContentResolver().query(
-                MovieContract.MovieEntry.CONTENT_URI,
-                null,
-                null,
-                null,
-                null
-        );
-        imageAdapter = new AndroidImageAdapter(getActivity(), movieData, 0);
+        imageAdapter = new AndroidImageAdapter(getActivity(), null, 0);
         GridView movieGridView = (GridView) rootView.findViewById(R.id.grid_movie_view);
         movieGridView.setAdapter(imageAdapter);
         movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -100,5 +92,32 @@ public class MoviePosterMainFragment extends Fragment {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        getLoaderManager().initLoader(MOVIE_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(
+                getActivity(),
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        imageAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        imageAdapter.swapCursor(null);
     }
 }

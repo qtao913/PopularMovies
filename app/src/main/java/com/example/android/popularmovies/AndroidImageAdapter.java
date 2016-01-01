@@ -1,14 +1,12 @@
 package com.example.android.popularmovies;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Build;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 
 import com.example.android.popularmovies.data.MovieContract;
@@ -29,7 +27,6 @@ public class AndroidImageAdapter extends CursorAdapter {
 //        this.currentActivity = currentActivity;
 //    }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public AndroidImageAdapter(Activity currentActivity, Cursor cursor, int flags) {
         super(currentActivity, cursor, flags);
     }

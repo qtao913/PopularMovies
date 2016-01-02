@@ -145,10 +145,10 @@ public class MovieProvider extends ContentProvider {
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values) {
         final SQLiteDatabase db = movieDbHelper.getWritableDatabase();
+        int returnCount = 0;
         switch (sUriMatcher.match(uri)) {
             case MOVIE:
                 db.beginTransaction();
-                int returnCount = 0;
                 try {
                     for (ContentValues value : values) {
                         long _id = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, value);
@@ -161,9 +161,10 @@ public class MovieProvider extends ContentProvider {
                     db.endTransaction();
                 }
                 getContext().getContentResolver().notifyChange(uri, null);
-                return returnCount;
+                break;
             default:
-                return super.bulkInsert(uri, values);
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+        return returnCount;
     }
 }

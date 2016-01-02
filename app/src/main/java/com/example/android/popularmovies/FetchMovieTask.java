@@ -110,7 +110,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
             int rowInserted = 0;
             if (moviesForDatabase.length > 0) {
                 rowInserted = mContext.getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, moviesForDatabase);
-                Log.v(LOG_TAG, "Bulk insert: "+rowInserted);
+                //Log.v(LOG_TAG, "Bulk insert: "+rowInserted);
             }
 
 

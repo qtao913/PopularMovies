@@ -1,8 +1,11 @@
 package com.example.android.popularmovies;
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.android.popularmovies.data.MovieContract;
 import com.squareup.picasso.Picasso;
 
 
@@ -62,12 +66,22 @@ public class MovieDetailActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
             ImageView movieDetailView = (ImageView) rootView.findViewById(R.id.movie_detail);
-            Movie movieDetail = getActivity().getIntent().getParcelableExtra("movie");
-            if (movieDetail != null) {
-                if (movieDetail.imagePath == null) {
+            String movieDetail = getActivity().getIntent().getDataString();
+            Uri buildUri = Uri.parse(movieDetail);
+            Cursor c = getActivity().getContentResolver().query(
+                    buildUri,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+            if (c.moveToFirst()) {
+                Log.v("Count database", Integer.toString(c.getCount()));
+                int index = c.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMAGE_URL);
+                if (c.getString(index) == null) {
                     Picasso.with(getActivity()).load(R.drawable.image_place_holder).resize(185, 252).into(movieDetailView);
                 } else {
-                    Picasso.with(getActivity()).load(movieDetail.imagePath).into(movieDetailView);
+                    Picasso.with(getActivity()).load(c.getString(index)).into(movieDetailView);
                 }
             }
 

@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -24,6 +23,14 @@ import com.example.android.popularmovies.data.MovieContract;
 public class MoviePosterMainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     public AndroidImageAdapter imageAdapter;
     private static final int MOVIE_LOADER = 0;
+
+    private static final String[] POSTER_PROJECTION = {
+            MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID,
+            MovieContract.MovieEntry.COLUMN_IMAGE_URL
+    };
+    public static final int COLUMN_ID = 0;
+    public static final int COLUMN_IMAGE_URL = 1;
+
     public MoviePosterMainFragment() {
     }
 
@@ -85,17 +92,16 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
+                Cursor cursor = (Cursor)parent.getItemAtPosition(position);
                 Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-                Bundle detail = new Bundle();
-//                detail.putParcelable("movie", movieList.get(position));
-                intent.putExtras(detail);
+                intent.setData(MovieContract.MovieEntry.buildMovieUri(cursor.getLong(COLUMN_ID)));
                 startActivity(intent);
             }
         });
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(MOVIE_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
@@ -105,7 +111,7 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         return new CursorLoader(
                 getActivity(),
                 MovieContract.MovieEntry.CONTENT_URI,
-                null,
+                POSTER_PROJECTION,
                 null,
                 null,
                 null);

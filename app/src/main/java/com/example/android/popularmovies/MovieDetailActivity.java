@@ -1,11 +1,14 @@
 package com.example.android.popularmovies;
 
+
+import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,8 +18,6 @@ import android.widget.ImageView;
 
 import com.example.android.popularmovies.data.MovieContract;
 import com.squareup.picasso.Picasso;
-
-
 public class MovieDetailActivity extends ActionBarActivity {
 
     @Override
@@ -53,39 +54,53 @@ public class MovieDetailActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
-
+    public static class PlaceholderFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+        private static final int DETAIL_LOADER = 0;
         public PlaceholderFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
-            ImageView movieDetailView = (ImageView) rootView.findViewById(R.id.movie_detail);
-            String movieDetail = getActivity().getIntent().getDataString();
-            Uri buildUri = Uri.parse(movieDetail);
-            Cursor c = getActivity().getContentResolver().query(
-                    buildUri,
-                    null,
-                    null,
-                    null,
-                    null
-            );
-            if (c.moveToFirst()) {
-                Log.v("Count database", Integer.toString(c.getCount()));
-                int index = c.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMAGE_URL);
-                if (c.getString(index) == null) {
+            return inflater.inflate(R.layout.fragment_movie_detail, container, false);
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            getLoaderManager().initLoader(DETAIL_LOADER, null, this);
+            super.onActivityCreated(savedInstanceState);
+        }
+
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            Intent intent = getActivity().getIntent();
+            if (intent == null)
+                return null;
+            return new CursorLoader(getActivity(),intent.getData(),null,null,null,null);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            ImageView movieDetailView = (ImageView) getView().findViewById(R.id.movie_detail);
+            if (data.moveToFirst()) {
+                //Log.v("Count database", Integer.toString(data.getCount()));
+                int index = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMAGE_URL);
+                if (data.getString(index) == null) {
                     Picasso.with(getActivity()).load(R.drawable.image_place_holder).resize(185, 252).into(movieDetailView);
                 } else {
-                    Picasso.with(getActivity()).load(c.getString(index)).into(movieDetailView);
+                    Picasso.with(getActivity()).load(data.getString(index)).into(movieDetailView);
                 }
             }
+        }
 
-            return rootView;
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+
         }
     }
 }

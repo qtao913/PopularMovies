@@ -8,15 +8,17 @@ import android.view.MenuItem;
 
 
 public class MainActivity extends ActionBarActivity {
-
+    private final String MOVIEPOSTERFRAGMENT_TAG = "moviePosterFragment";
+    private String movieSortingPreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        movieSortingPreference = Utility.getPreferredMovieSorting(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new MoviePosterMainFragment())
+                    .add(R.id.container, new MoviePosterMainFragment(), MOVIEPOSTERFRAGMENT_TAG)
                     .commit();
         }
     }
@@ -45,6 +47,18 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String sortingPreference = Utility.getPreferredMovieSorting(this);
+        if (sortingPreference != null && !sortingPreference.equals(movieSortingPreference)) {
+            MoviePosterMainFragment moviePosterFragment =
+                    (MoviePosterMainFragment) getSupportFragmentManager()
+                            .findFragmentByTag(MOVIEPOSTERFRAGMENT_TAG);
+            if (moviePosterFragment != null) {
+                moviePosterFragment.onMovieSortingChanged();
+            }
+            movieSortingPreference = sortingPreference;
+        }
+    }
 }

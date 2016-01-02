@@ -2,10 +2,8 @@ package com.example.android.popularmovies;
 
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -34,6 +32,11 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
     public MoviePosterMainFragment() {
     }
 
+    public void onMovieSortingChanged() {
+        updateMovie();
+        getLoaderManager().restartLoader(MOVIE_LOADER, null, this);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,17 +61,9 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        updateMovie();
-    }
-
     private void updateMovie(){
         FetchMovieTask fetchMovieTask = new FetchMovieTask(getActivity());
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String sortingPref = prefs.getString(getString(R.string.sorting_preference_key),
-                getString(R.string.most_popular_value));
+        String sortingPref = Utility.getPreferredMovieSorting(getActivity());
         fetchMovieTask.execute(sortingPref);
     }
 

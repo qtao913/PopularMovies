@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">PopularMovies</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -14,6 +14,10 @@
     <string name="most_popular_label">Most Popular</string>
     <string name="most_popular_value" translatable = "false">popularity.desc</string>
     <string name="highest_rated_value" translatable = "false">vote_average.desc</string>
+    <string name="add_to_favorite">Add to Personal Favorite Movie List</string>
+    <string name="movie_rating">Rating
+        <xliff:g id="colon"> \u003A </xliff:g>
+    </string>
 
 
 </resources>

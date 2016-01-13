@@ -3,11 +3,14 @@ package com.example.android.popularmovies;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +24,7 @@ import com.example.android.popularmovies.data.MovieContract;
 public class MoviePosterMainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     public AndroidImageAdapter imageAdapter;
     private static final int MOVIE_LOADER = 0;
-
+    private Toolbar toolbar;
     private static final String[] POSTER_PROJECTION = {
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID,
             MovieContract.MovieEntry.COLUMN_IMAGE_URL
@@ -76,6 +79,8 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         populateMovieListView(rootView);
         return rootView;
     }
@@ -83,6 +88,9 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
     private void populateMovieListView(View rootView) {
         imageAdapter = new AndroidImageAdapter(getActivity(), null, 0);
         GridView movieGridView = (GridView) rootView.findViewById(R.id.grid_movie_view);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            movieGridView.setNestedScrollingEnabled(true);
+        }
         movieGridView.setAdapter(imageAdapter);
         movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,

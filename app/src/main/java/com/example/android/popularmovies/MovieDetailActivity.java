@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
@@ -24,7 +26,7 @@ import android.widget.TextView;
 import com.example.android.popularmovies.data.MovieContract;
 import com.squareup.picasso.Picasso;
 
-public class MovieDetailActivity extends ActionBarActivity {
+public class MovieDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +68,20 @@ public class MovieDetailActivity extends ActionBarActivity {
      */
     public static class PlaceholderFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
         private static final int DETAIL_LOADER = 0;
+        private Toolbar detailViewToolBar;
+        private CollapsingToolbarLayout collapsingToolbarLayout;
         public PlaceholderFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_movie_detail, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
+            detailViewToolBar = (Toolbar) rootView.findViewById(R.id.movie_detail_toolbar);
+            ((AppCompatActivity) getActivity()).setSupportActionBar(detailViewToolBar);
+            collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsingToolbarLayout);
+            collapsingToolbarLayout.setTitle("Movie Detail");
+            return rootView;
         }
 
         @Override
@@ -121,12 +130,16 @@ public class MovieDetailActivity extends ActionBarActivity {
                         data.getColumnIndex(MovieContract.MovieEntry.COLUMN_SYNOPSIS)));
                 
                 ImageView posterView = (ImageView) getView().findViewById(R.id.movie_poster);
+                ImageView imageToolBar = (ImageView)getView().findViewById(R.id.image_toolbar);
                 int index = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMAGE_URL);
                 if (data.getString(index) == null) {
                     Picasso.with(getActivity()).load(R.drawable.image_place_holder).resize(480,640)
                     .into(posterView);
+                    Picasso.with(getActivity()).load(R.drawable.image_place_holder)
+                            .into(imageToolBar);
                 } else {
                     Picasso.with(getActivity()).load(data.getString(index)).into(posterView);
+                    Picasso.with(getActivity()).load(data.getString(index)).into(imageToolBar);
                 }
 
                 TextView ratingView = (TextView) getView().findViewById(R.id.movie_rating);

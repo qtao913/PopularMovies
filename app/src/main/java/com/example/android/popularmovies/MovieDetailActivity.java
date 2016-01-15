@@ -149,11 +149,11 @@ public class MovieDetailActivity extends AppCompatActivity {
                 if (data.getString(index) == null) {
                     Picasso.with(getActivity()).load(R.drawable.image_place_holder).resize(480,640)
                     .into(posterView);
-                    Picasso.with(getActivity()).load(R.drawable.image_place_holder)
-                            .into(imageToolBar);
+//                    Picasso.with(getActivity()).load(R.drawable.image_place_holder)
+//                            .into(imageToolBar);
                 } else {
                     Picasso.with(getActivity()).load(data.getString(index)).into(posterView);
-                    Picasso.with(getActivity()).load(data.getString(index)).into(imageToolBar);
+//                    Picasso.with(getActivity()).load(data.getString(index)).into(imageToolBar);
                 }
 
                 TextView ratingView = (TextView) getView().findViewById(R.id.movie_rating);

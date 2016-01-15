@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -70,6 +71,13 @@ public class MovieDetailActivity extends AppCompatActivity {
         private static final int DETAIL_LOADER = 0;
         private Toolbar detailViewToolBar;
         private CollapsingToolbarLayout collapsingToolbarLayout;
+        int[] mResources = {
+                R.drawable.first,
+                R.drawable.second,
+                R.drawable.third
+        };
+        private CustomPagerAdapter mCustomPagerAdapter;
+        private ViewPager mViewPager;
         public PlaceholderFragment() {
         }
 
@@ -79,6 +87,12 @@ public class MovieDetailActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
             detailViewToolBar = (Toolbar) rootView.findViewById(R.id.movie_detail_toolbar);
             ((AppCompatActivity) getActivity()).setSupportActionBar(detailViewToolBar);
+
+            //loading image in the tool bar
+            mCustomPagerAdapter = new CustomPagerAdapter(getActivity(), mResources);
+            mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+            mViewPager.setAdapter(mCustomPagerAdapter);
+
             collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsingToolbarLayout);
             collapsingToolbarLayout.setTitle("Movie Detail");
             return rootView;

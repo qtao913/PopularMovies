@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.android.popularmovies.data.MovieContract;
+import com.example.android.popularmovies.pageAnimations.DepthPageTransformer;
 
 @TargetApi(11)
 public class MovieDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
@@ -82,6 +83,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         mPagerAdapter = new DetailViewPagerAdapter(getSupportFragmentManager(), data);
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(currentPos);
+        //mPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        mPager.setPageTransformer(true, new DepthPageTransformer());
     }
 
     @Override

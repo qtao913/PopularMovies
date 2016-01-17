@@ -1,32 +1,34 @@
 package com.example.android.popularmovies;
 
 
+import android.annotation.TargetApi;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.android.popularmovies.data.MovieContract;
+
+@TargetApi(11)
 public class MovieDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+    private static final int MOVIE_LOADER = 0;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
+    private static final String[] MOVIE_TABLE_PROJECTION = {
+            MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.container, new MovieDetailInfoFragment())
-//                    .commit();
-//        }
-        mPager = (ViewPager) findViewById(R.id.detail_view_pager);
-        mPagerAdapter = new DetailViewPagerAdapter(getSupportFragmentManager(), 5);
-        mPager.setAdapter(mPagerAdapter);
+        getLoaderManager().initLoader(MOVIE_LOADER, null, this);
     }
 
 
@@ -52,18 +54,38 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return null;
+    public android.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(
+                this,
+                MovieContract.MovieEntry.CONTENT_URI,
+                MOVIE_TABLE_PROJECTION,
+                null,
+                null,
+                MoviePosterMainFragment.SORT_ORDER);
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+    public void onLoadFinished(android.content.Loader<Cursor> loader, Cursor data) {
+        Intent intent = getIntent();
+        if (intent == null)
+            return;
+        int currentPos = intent.getIntExtra("current pos", 0);
+//        while (mCursor.moveToNext()) {
+//            Log.v("", "child view id = " + mCursor.getLong(0));
+//            Log.v("", "child cursor position = " + mCursor.getPosition());
+//        }
 
+        data.moveToPosition(currentPos);
+        mPager = (ViewPager) findViewById(R.id.detail_view_pager);
+        mPagerAdapter = new DetailViewPagerAdapter(getSupportFragmentManager(), data);
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setCurrentItem(currentPos);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+    public void onLoaderReset(android.content.Loader<Cursor> loader) {
 
     }
 }

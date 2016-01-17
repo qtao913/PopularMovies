@@ -29,8 +29,8 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID,
             MovieContract.MovieEntry.COLUMN_IMAGE_URL
     };
-    public static final int COLUMN_ID = 0;
     public static final int COLUMN_IMAGE_URL = 1;
+    public static final String SORT_ORDER = MovieContract.MovieEntry._ID + " ASC";
 
     public MoviePosterMainFragment() {
     }
@@ -97,7 +97,8 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
                                     int position, long id) {
                 Cursor cursor = (Cursor)parent.getItemAtPosition(position);
                 Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-                intent.setData(MovieContract.MovieEntry.buildMovieUri(cursor.getLong(COLUMN_ID)));
+                cursor.moveToPosition(-1);
+                intent.putExtra("current pos", position);
                 startActivity(intent);
             }
         });
@@ -117,7 +118,7 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
                 POSTER_PROJECTION,
                 null,
                 null,
-                null);
+                SORT_ORDER);
     }
 
     @Override

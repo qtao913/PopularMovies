@@ -1,8 +1,12 @@
 package com.example.android.popularmovies;
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import com.example.android.popularmovies.data.MovieContract;
 
 
 /**
@@ -10,14 +14,20 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  */
 public class DetailViewPagerAdapter extends FragmentStatePagerAdapter {
     int numberOfPage;
-    public DetailViewPagerAdapter(FragmentManager fm, int numberOfPage) {
+    Cursor dataRecord;
+
+    public static final int COLUMN_ID = 0;
+    public DetailViewPagerAdapter(FragmentManager fm, Cursor cursor) {
         super(fm);
-        this.numberOfPage = numberOfPage;
+        dataRecord = cursor;
+        numberOfPage = dataRecord.getCount();
     }
 
     @Override
     public Fragment getItem(int i) {
-        return new MovieDetailInfoFragment();
+        dataRecord.moveToPosition(i);
+        Uri uri = MovieContract.MovieEntry.buildMovieUri(dataRecord.getLong(COLUMN_ID));
+        return MovieDetailInfoFragment.create(uri);
     }
 
     @Override

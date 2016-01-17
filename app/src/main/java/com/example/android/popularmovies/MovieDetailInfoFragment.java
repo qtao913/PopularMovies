@@ -1,8 +1,8 @@
 package com.example.android.popularmovies;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -35,8 +35,14 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
     };
     private CustomPagerAdapter mCustomPagerAdapter;
     private ViewPager mViewPager;
-    public MovieDetailInfoFragment() {
+    private Uri currentUri;
+
+    public static MovieDetailInfoFragment create (Uri uri) {
+        MovieDetailInfoFragment fragment = new MovieDetailInfoFragment();
+        fragment.currentUri = uri;
+        return fragment;
     }
+    public MovieDetailInfoFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,16 +70,12 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Intent intent = getActivity().getIntent();
-        if (intent == null)
-            return null;
-        return new CursorLoader(getActivity(),intent.getData(),null,null,null,null);
+        return new CursorLoader(getActivity(),currentUri,null,null,null,null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.moveToFirst()) {
-            //Log.v("Count database", Integer.toString(data.getCount()));
             TextView titleView = (TextView)getView().findViewById(R.id.movie_title);
             String title = data.getString(
                     data.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));

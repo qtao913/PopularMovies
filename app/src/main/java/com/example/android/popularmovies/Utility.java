@@ -2,7 +2,16 @@ package com.example.android.popularmovies;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by qlzh727 on 1/1/16.
@@ -12,5 +21,49 @@ public class Utility {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(context.getString(R.string.sorting_preference_key),
                 context.getString(R.string.most_popular_value));
+    }
+
+    public static String fetchRowJson(Uri uri){
+        final String LOG_TAG = Utility.class.getSimpleName() + " fetch Row Json";
+        HttpURLConnection urlConnection = null;
+        BufferedReader reader = null;
+        String movieJsonStr = null;
+        try {
+            URL url = new URL(uri.toString());
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
+            if (inputStream == null) {
+                return null;
+            }
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line + "\n");
+            }
+            if (buffer.length() == 0) {
+                return null;
+            }
+            movieJsonStr = buffer.toString();
+            //Log.v(LOG_TAG, "check origianl Json: "+ movieJsonStr);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error", e);
+            return null;
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (final IOException e) {
+                    Log.e(LOG_TAG, "Error Closing Stream", e);
+                }
+            }
+        }
+        return movieJsonStr;
     }
 }

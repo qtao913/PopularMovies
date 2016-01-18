@@ -36,6 +36,7 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
     private CustomPagerAdapter mCustomPagerAdapter;
     private ViewPager mViewPager;
     private Uri currentUri;
+    public static String[] results;
 
     public static MovieDetailInfoFragment create (Uri uri) {
         MovieDetailInfoFragment fragment = new MovieDetailInfoFragment();
@@ -58,9 +59,15 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsingToolbarLayout);
         collapsingToolbarLayout.setTitle("Movie Detail");
+        TextView genreView = (TextView)rootView.findViewById(R.id.movie_genre);
+        TextView runtimeView = (TextView)rootView.findViewById(R.id.movie_runtime);
         return rootView;
     }
 
+    public void fetchAdditionalMovieData(int movieIdForQuery, TextView genreView, TextView runtimeView) {
+        FetchMovieAddtionalInfoTask task = new FetchMovieAddtionalInfoTask(genreView, runtimeView);
+        task.execute(Integer.toString(movieIdForQuery));
+    }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(DETAIL_LOADER, null, this);
@@ -76,6 +83,12 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.moveToFirst()) {
+            int mid = data.getInt(
+                    data.getColumnIndex(MovieContract.MovieEntry.COLUMN_MID));
+            TextView genreView = (TextView)getView().findViewById(R.id.movie_genre);
+            TextView runtimeView = (TextView)getView().findViewById(R.id.movie_runtime);
+            fetchAdditionalMovieData(mid, genreView, runtimeView);
+
             TextView titleView = (TextView)getView().findViewById(R.id.movie_title);
             String title = data.getString(
                     data.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
@@ -90,13 +103,6 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
             stringBuilder.setSpan(new StyleSpan(Typeface.NORMAL), 0, year.length(),
                     Spannable.SPAN_INCLUSIVE_INCLUSIVE);
             titleView.setText(stringBuilder);
-
-            // Hardcode genre and runtime at this moment
-            TextView genreView = (TextView)getView().findViewById(R.id.movie_genre);
-            genreView.setText("Test: Action | Comedy");
-
-            TextView runtimeView = (TextView)getView().findViewById(R.id.movie_runtime);
-            runtimeView.setText("Test: 120min");
 
             TextView synopsisView = (TextView) getView().findViewById(R.id.movie_synopsis);
             synopsisView.setText(data.getString(

@@ -21,6 +21,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.android.popularmovies.data.MovieContract;
+import com.example.android.popularmovies.fetchRawJSON.FetchMovieTask;
+
 public class MoviePosterMainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     public AndroidImageAdapter imageAdapter;
     private static final int MOVIE_LOADER = 0;

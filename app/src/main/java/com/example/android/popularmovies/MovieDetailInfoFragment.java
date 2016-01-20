@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.data.MovieContract;
+import com.example.android.popularmovies.fetchRawJSON.FetchMovieAddtionalInfoTask;
+import com.example.android.popularmovies.fetchRawJSON.FetchMovieGalleryTask;
 import com.squareup.picasso.Picasso;
 
 public class MovieDetailInfoFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
@@ -68,6 +70,11 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
         FetchMovieAddtionalInfoTask task = new FetchMovieAddtionalInfoTask(genreView, runtimeView);
         task.execute(Integer.toString(movieIdForQuery));
     }
+
+    public void fetchMovieGallery(int movieIdForQuery) {
+        FetchMovieGalleryTask galleryTask = new FetchMovieGalleryTask();
+        galleryTask.execute(Integer.toString(movieIdForQuery));
+    }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(DETAIL_LOADER, null, this);
@@ -88,6 +95,7 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
             TextView genreView = (TextView)getView().findViewById(R.id.movie_genre);
             TextView runtimeView = (TextView)getView().findViewById(R.id.movie_runtime);
             fetchAdditionalMovieData(mid, genreView, runtimeView);
+            fetchMovieGallery(mid);
 
             TextView titleView = (TextView)getView().findViewById(R.id.movie_title);
             String title = data.getString(

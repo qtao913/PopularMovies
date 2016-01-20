@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.database.Cursor;
 import android.test.AndroidTestCase;
 import com.example.android.popularmovies.data.MovieContract.MovieEntry;
+import com.example.android.popularmovies.fetchRawJSON.FetchMovieTask;
 
 /**
  * Created by qlzh727 on 12/28/15.

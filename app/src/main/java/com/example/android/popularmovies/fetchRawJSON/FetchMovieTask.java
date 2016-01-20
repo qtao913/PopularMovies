@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.fetchRawJSON;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.android.popularmovies.BuildConfig;
+import com.example.android.popularmovies.Utility;
 import com.example.android.popularmovies.data.MovieContract.MovieEntry;
 
 import org.json.JSONArray;
@@ -28,7 +30,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
 
     // handle insertion of a new Movie record in the Movie database
     // return the row ID of the added movie item
-    long addMovie(int movieId, String title, String synopsis,
+    public long addMovie(int movieId, String title, String synopsis,
                   double rating, String releaseDate, String imageUrl) {
         long rowId;
         Cursor movieCursor = mContext.getContentResolver().query(

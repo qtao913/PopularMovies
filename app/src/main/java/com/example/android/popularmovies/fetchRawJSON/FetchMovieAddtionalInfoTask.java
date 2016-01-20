@@ -1,9 +1,12 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.fetchRawJSON;
 
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
+
+import com.example.android.popularmovies.BuildConfig;
+import com.example.android.popularmovies.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;

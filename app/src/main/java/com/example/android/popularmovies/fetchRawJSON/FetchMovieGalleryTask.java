@@ -1,10 +1,13 @@
 package com.example.android.popularmovies.fetchRawJSON;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.example.android.popularmovies.BuildConfig;
+import com.example.android.popularmovies.CustomPagerAdapter;
 import com.example.android.popularmovies.Utility;
 
 import org.json.JSONArray;
@@ -15,11 +18,16 @@ import org.json.JSONObject;
  * Created by qlzh727 on 1/18/16.
  */
 public class FetchMovieGalleryTask extends AsyncTask<String, Void, String[]> {
-
+    Activity mActivity;
+    ViewPager mViewPager;
+    public FetchMovieGalleryTask (Activity activity, ViewPager viewPager) {
+        mActivity = activity;
+        mViewPager = viewPager;
+    }
     private String[] getDataFromJson(String movieJsonStr) throws JSONException {
         final String LOG_TAG = FetchMovieGalleryTask.class.getSimpleName();
         final String IMAGE_PATH_BASE = "http://image.tmdb.org/t/p/";
-        final String DEFAULT_SIZE = "w185/";
+        final String DEFAULT_SIZE = "w342/";
         final String OBJECT_NAME = "backdrops";
         final String IMAGE_PATH = "file_path";
         String[] result = null;
@@ -65,7 +73,9 @@ public class FetchMovieGalleryTask extends AsyncTask<String, Void, String[]> {
 
     @Override
     protected void onPostExecute(String[] strings) {
-
+        //loading image in the tool bar
+        CustomPagerAdapter mCustomPagerAdapter = new CustomPagerAdapter(mActivity, strings);
+        mViewPager.setAdapter(mCustomPagerAdapter);
     }
 }
 

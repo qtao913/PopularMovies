@@ -54,15 +54,8 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
         detailViewToolBar = (Toolbar) rootView.findViewById(R.id.movie_detail_toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(detailViewToolBar);
 
-        //loading image in the tool bar
-        mCustomPagerAdapter = new CustomPagerAdapter(getActivity(), mResources);
-        mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
-        mViewPager.setAdapter(mCustomPagerAdapter);
-
         collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsingToolbarLayout);
         collapsingToolbarLayout.setTitle("Movie Detail");
-        TextView genreView = (TextView)rootView.findViewById(R.id.movie_genre);
-        TextView runtimeView = (TextView)rootView.findViewById(R.id.movie_runtime);
         return rootView;
     }
 
@@ -72,7 +65,8 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
     }
 
     public void fetchMovieGallery(int movieIdForQuery) {
-        FetchMovieGalleryTask galleryTask = new FetchMovieGalleryTask();
+        FetchMovieGalleryTask galleryTask = new FetchMovieGalleryTask(
+                getActivity(), (ViewPager) getView().findViewById(R.id.pager));
         galleryTask.execute(Integer.toString(movieIdForQuery));
     }
     @Override
@@ -92,9 +86,12 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
         if (data.moveToFirst()) {
             int mid = data.getInt(
                     data.getColumnIndex(MovieContract.MovieEntry.COLUMN_MID));
+            // query the runtime and genre
             TextView genreView = (TextView)getView().findViewById(R.id.movie_genre);
             TextView runtimeView = (TextView)getView().findViewById(R.id.movie_runtime);
             fetchAdditionalMovieData(mid, genreView, runtimeView);
+
+            //query the image gallary
             fetchMovieGallery(mid);
 
             TextView titleView = (TextView)getView().findViewById(R.id.movie_title);

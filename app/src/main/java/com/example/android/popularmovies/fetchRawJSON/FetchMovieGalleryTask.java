@@ -3,6 +3,7 @@ package com.example.android.popularmovies.fetchRawJSON;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
@@ -13,6 +14,9 @@ import com.example.android.popularmovies.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by qlzh727 on 1/18/16.
@@ -76,6 +80,31 @@ public class FetchMovieGalleryTask extends AsyncTask<String, Void, String[]> {
         //loading image in the tool bar
         CustomPagerAdapter mCustomPagerAdapter = new CustomPagerAdapter(mActivity, strings);
         mViewPager.setAdapter(mCustomPagerAdapter);
+        periodicalSwipe(strings.length);
+    }
+
+    private void periodicalSwipe(final int totalPage) {
+        final Handler handler = new Handler();
+        final Runnable swipe = new Runnable(){
+            @Override
+            public void run() {
+                int currentPage = mViewPager.getCurrentItem();
+                if (currentPage == totalPage - 1) {
+                    currentPage = 0;
+                } else {
+                    currentPage ++;
+                }
+                mViewPager.setCurrentItem(currentPage, true);
+            }
+        };
+
+        Timer swipeTimer = new Timer();
+        swipeTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(swipe);
+            }
+        }, 1000, 3000);
     }
 }
 

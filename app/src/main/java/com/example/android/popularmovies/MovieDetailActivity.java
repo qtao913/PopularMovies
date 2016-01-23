@@ -17,7 +17,7 @@ import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.pageAnimations.DepthPageTransformer;
 
 @TargetApi(11)
-public class MovieDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MovieDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int MOVIE_LOADER = 0;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;

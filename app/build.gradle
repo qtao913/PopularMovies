@@ -22,6 +22,7 @@ android {
     }
     buildTypes.each {
         it.buildConfigField 'String', 'POPULAR_MOVIES_API_KEY', MyPopularMoviesApiKey
+        it.buildConfigField 'String', 'YOUTUBE_ANDROID_API_KEY', MyPopularMovieYouTubeAndroidKey
     }
 }
 

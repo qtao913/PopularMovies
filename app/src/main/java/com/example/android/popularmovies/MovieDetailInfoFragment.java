@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +25,18 @@ import android.widget.TextView;
 import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieAddtionalInfoTask;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieGalleryTask;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.squareup.picasso.Picasso;
 
-public class MovieDetailInfoFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MovieDetailInfoFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor>, YouTubeThumbnailView.OnInitializedListener {
     private static final int DETAIL_LOADER = 0;
+    private static final String TEST_VIDEO_ID = "o7VVHhK9zf0";
     private Toolbar detailViewToolBar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
+
     int[] mResources = {
             R.drawable.first,
             R.drawable.second,
@@ -56,6 +63,11 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsingToolbarLayout);
         collapsingToolbarLayout.setTitle("Movie Detail");
+
+        YouTubeThumbnailView youtubeThumbnailView =
+                (YouTubeThumbnailView) rootView.findViewById(R.id.youtube_thumbnail);
+        youtubeThumbnailView.initialize(BuildConfig.YOUTUBE_ANDROID_API_KEY, this);
+
         return rootView;
     }
 
@@ -135,5 +147,18 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView,
+                                        YouTubeThumbnailLoader youTubeThumbnailLoader) {
+        Log.v("", "Youtube init success");
+        youTubeThumbnailLoader.setVideo(TEST_VIDEO_ID);
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView,
+                                        YouTubeInitializationResult youTubeInitializationResult) {
+        Log.v("", "Youtube init failure");
     }
 }

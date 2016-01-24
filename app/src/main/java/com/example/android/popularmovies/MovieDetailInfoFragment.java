@@ -1,5 +1,6 @@
 package com.example.android.popularmovies;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -36,16 +37,8 @@ public class MovieDetailInfoFragment extends Fragment implements
     private static final String TEST_VIDEO_ID = "o7VVHhK9zf0";
     private Toolbar detailViewToolBar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
-
-    int[] mResources = {
-            R.drawable.first,
-            R.drawable.second,
-            R.drawable.third
-    };
-    private CustomPagerAdapter mCustomPagerAdapter;
-    private ViewPager mViewPager;
+    private YouTubeThumbnailView mYoutubeThumbnailView;
     private Uri currentUri;
-    public static String[] results;
 
     public static MovieDetailInfoFragment create (Uri uri) {
         MovieDetailInfoFragment fragment = new MovieDetailInfoFragment();
@@ -64,9 +57,8 @@ public class MovieDetailInfoFragment extends Fragment implements
         collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsingToolbarLayout);
         collapsingToolbarLayout.setTitle("Movie Detail");
 
-        YouTubeThumbnailView youtubeThumbnailView =
-                (YouTubeThumbnailView) rootView.findViewById(R.id.youtube_thumbnail);
-        youtubeThumbnailView.initialize(BuildConfig.YOUTUBE_ANDROID_API_KEY, this);
+        mYoutubeThumbnailView = (YouTubeThumbnailView) rootView.findViewById(R.id.youtube_thumbnail);
+        mYoutubeThumbnailView.initialize(BuildConfig.YOUTUBE_ANDROID_API_KEY, this);
 
         return rootView;
     }
@@ -154,6 +146,14 @@ public class MovieDetailInfoFragment extends Fragment implements
                                         YouTubeThumbnailLoader youTubeThumbnailLoader) {
         Log.v("", "Youtube init success");
         youTubeThumbnailLoader.setVideo(TEST_VIDEO_ID);
+        mYoutubeThumbnailView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent playYoutube = new Intent(getActivity(), YouTubePlayerActivity.class);
+                playYoutube.putExtra("youtube path", TEST_VIDEO_ID);
+                startActivity(playYoutube);
+            }
+        });
     }
 
     @Override

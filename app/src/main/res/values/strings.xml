@@ -18,4 +18,5 @@
     <string name="movie_rating">Rating
         <xliff:g id="colon"> \u003A </xliff:g>
     </string>
+    <string name="title_activity_you_tube_player">YouTubePlayerActivity</string>
 </resources>

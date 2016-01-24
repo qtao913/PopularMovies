@@ -24,7 +24,7 @@ public class YouTubePlayerActivity extends YouTubeBaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_you_tube_player);
+        setContentView(R.layout.activity_youtube_player);
         myYouTubePlayerFragment = (YouTubePlayerFragment)getFragmentManager()
                 .findFragmentById(R.id.youtube_player_fragment);
         myYouTubePlayerFragment.initialize(BuildConfig.YOUTUBE_ANDROID_API_KEY, this);
@@ -59,6 +59,7 @@ public class YouTubePlayerActivity extends YouTubeBaseActivity
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
         if (!wasRestored && youTubeId != null) {
             youTubePlayer.cueVideo(youTubeId);
+            youTubePlayer.setFullscreen(true);
         }
     }
 

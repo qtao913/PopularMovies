@@ -42,6 +42,14 @@ public class MovieDetailInfoFragment extends Fragment implements
     private Uri currentUri;
     private LinearLayout mTrailers;
     private LinearLayout mCasts;
+    private YouTubeThumbnailView[] trailerThumbnailViews;
+    private YouTubeThumbnailLoader[] trailerThumbnailLoaders;
+
+    private String[] ids = new String[] {
+            "xf8wVezS3JY",
+            "BOVriTeIypQ",
+            "7GqClqvlObY"
+    };
 
     public static MovieDetailInfoFragment create (Uri uri) {
         MovieDetailInfoFragment fragment = new MovieDetailInfoFragment();
@@ -71,17 +79,16 @@ public class MovieDetailInfoFragment extends Fragment implements
 
     private void setMovieTrailerView(View rootView, ViewGroup container) {
         mTrailers = (LinearLayout) rootView.findViewById(R.id.movie_trailers);
-        String[] ids = new String[] {
-                TEST_VIDEO_ID,
-                TEST_VIDEO_ID,
-                TEST_VIDEO_ID
-        };
-        for (String id : ids) {
+
+        trailerThumbnailViews = new YouTubeThumbnailView[ids.length];
+        trailerThumbnailLoaders = new YouTubeThumbnailLoader[ids.length];
+        for (int i = 0; i < ids.length; i++) {
             View trailer = LayoutInflater.from(getActivity())
                     .inflate(R.layout.youtube_thumbnail_view, container, false);
             YouTubeThumbnailView testView = (YouTubeThumbnailView) trailer.findViewById(R.id.youtube_thumbnail_item);
             testView.initialize(BuildConfig.YOUTUBE_ANDROID_API_KEY, this);
             mTrailers.addView(trailer);
+            trailerThumbnailViews[i] = testView;
         }
     }
 
@@ -188,17 +195,29 @@ public class MovieDetailInfoFragment extends Fragment implements
 
     @Override
     public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView,
-                                        YouTubeThumbnailLoader youTubeThumbnailLoader) {
+                                        final YouTubeThumbnailLoader youTubeThumbnailLoader) {
         Log.v("", "Youtube init success");
-        youTubeThumbnailLoader.setVideo(TEST_VIDEO_ID);
-        mYoutubeThumbnailView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent playYoutube = new Intent(getActivity(), YouTubePlayerActivity.class);
-                playYoutube.putExtra("youtube path", TEST_VIDEO_ID);
-                startActivity(playYoutube);
+        for (int i = 0; i < ids.length; i++) {
+            if (this.trailerThumbnailViews[i] == youTubeThumbnailView) {
+                this.trailerThumbnailLoaders[i] = youTubeThumbnailLoader;
+                final String viewPath = ids[i];
+                youTubeThumbnailLoader.setVideo(viewPath);
+                youTubeThumbnailView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent playYoutube = new Intent(getActivity(), YouTubePlayerActivity.class);
+                        playYoutube.putExtra("youtube path", viewPath);
+                        startActivity(playYoutube);
+                        if (trailerThumbnailLoaders != null) {
+                            for (YouTubeThumbnailLoader loader : trailerThumbnailLoaders) {
+                                loader.release();
+                            }
+                            trailerThumbnailLoaders = null;
+                        }
+                    }
+                });
             }
-        });
+        }
     }
 
     @Override

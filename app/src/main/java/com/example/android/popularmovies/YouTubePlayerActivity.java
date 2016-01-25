@@ -85,4 +85,14 @@ public class YouTubePlayerActivity extends YouTubeBaseActivity
     protected YouTubePlayer.Provider getYouTubePlayerProvider() {
         return (YouTubePlayerView)findViewById(R.id.youtube_player_fragment);
     }
+
+//    @Override
+//    public void onBackPressed() {
+//        int count = getFragmentManager().getBackStackEntryCount();
+//        if (count == 0) {
+//            super.onBackPressed();
+//        } else {
+//            getFragmentManager().popBackStack();
+//        }
+//    }
 }

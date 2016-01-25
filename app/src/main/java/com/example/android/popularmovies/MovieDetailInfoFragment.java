@@ -38,12 +38,10 @@ public class MovieDetailInfoFragment extends Fragment implements
     private static final String TEST_VIDEO_ID = "o7VVHhK9zf0";
     private Toolbar detailViewToolBar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private YouTubeThumbnailView mYoutubeThumbnailView;
     private Uri currentUri;
     private LinearLayout mTrailers;
     private LinearLayout mCasts;
     private YouTubeThumbnailView[] trailerThumbnailViews;
-    private YouTubeThumbnailLoader[] trailerThumbnailLoaders;
 
     private String[] ids = new String[] {
             "xf8wVezS3JY",
@@ -68,9 +66,6 @@ public class MovieDetailInfoFragment extends Fragment implements
         collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsingToolbarLayout);
         collapsingToolbarLayout.setTitle("Movie Detail");
 
-        mYoutubeThumbnailView = (YouTubeThumbnailView) rootView.findViewById(R.id.youtube_thumbnail);
-        mYoutubeThumbnailView.initialize(BuildConfig.YOUTUBE_ANDROID_API_KEY, this);
-
         //test horizontal scroll view
         setMovieTrailerView(rootView, container);
         setMovieCastView(rootView, container);
@@ -81,7 +76,6 @@ public class MovieDetailInfoFragment extends Fragment implements
         mTrailers = (LinearLayout) rootView.findViewById(R.id.movie_trailers);
 
         trailerThumbnailViews = new YouTubeThumbnailView[ids.length];
-        trailerThumbnailLoaders = new YouTubeThumbnailLoader[ids.length];
         for (int i = 0; i < ids.length; i++) {
             View trailer = LayoutInflater.from(getActivity())
                     .inflate(R.layout.youtube_thumbnail_view, container, false);
@@ -190,7 +184,6 @@ public class MovieDetailInfoFragment extends Fragment implements
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 
     @Override
@@ -199,7 +192,6 @@ public class MovieDetailInfoFragment extends Fragment implements
         Log.v("", "Youtube init success");
         for (int i = 0; i < ids.length; i++) {
             if (this.trailerThumbnailViews[i] == youTubeThumbnailView) {
-                this.trailerThumbnailLoaders[i] = youTubeThumbnailLoader;
                 final String viewPath = ids[i];
                 youTubeThumbnailLoader.setVideo(viewPath);
                 youTubeThumbnailView.setOnClickListener(new View.OnClickListener() {
@@ -208,12 +200,17 @@ public class MovieDetailInfoFragment extends Fragment implements
                         Intent playYoutube = new Intent(getActivity(), YouTubePlayerActivity.class);
                         playYoutube.putExtra("youtube path", viewPath);
                         startActivity(playYoutube);
-                        if (trailerThumbnailLoaders != null) {
-                            for (YouTubeThumbnailLoader loader : trailerThumbnailLoaders) {
-                                loader.release();
-                            }
-                            trailerThumbnailLoaders = null;
-                        }
+                    }
+                });
+                youTubeThumbnailLoader.setOnThumbnailLoadedListener(new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
+                    @Override
+                    public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+                        youTubeThumbnailLoader.release();
+                    }
+
+                    @Override
+                    public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
+                        youTubeThumbnailLoader.release();
                     }
                 });
             }
@@ -224,5 +221,10 @@ public class MovieDetailInfoFragment extends Fragment implements
     public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView,
                                         YouTubeInitializationResult youTubeInitializationResult) {
         Log.v("", "Youtube init failure");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

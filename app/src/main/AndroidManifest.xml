@@ -36,9 +36,7 @@
 
         <activity
             android:name=".YouTubePlayerActivity"
-            android:label="@string/title_activity_you_tube_player"
-            android:screenOrientation="landscape"
-            android:configChanges="orientation|keyboardHidden">
+            android:label="@string/title_activity_you_tube_player">
         </activity>
     </application>
 

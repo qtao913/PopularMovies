@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.data.MovieContract;
@@ -39,6 +40,7 @@ public class MovieDetailInfoFragment extends Fragment implements
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private YouTubeThumbnailView mYoutubeThumbnailView;
     private Uri currentUri;
+    private LinearLayout mTrailers;
 
     public static MovieDetailInfoFragment create (Uri uri) {
         MovieDetailInfoFragment fragment = new MovieDetailInfoFragment();
@@ -60,9 +62,34 @@ public class MovieDetailInfoFragment extends Fragment implements
         mYoutubeThumbnailView = (YouTubeThumbnailView) rootView.findViewById(R.id.youtube_thumbnail);
         mYoutubeThumbnailView.initialize(BuildConfig.YOUTUBE_ANDROID_API_KEY, this);
 
+        //test horizontal scroll view
+        setMovieCastView(rootView, container);
         return rootView;
     }
 
+    private void setMovieCastView(View rootView, ViewGroup container) {
+        mTrailers = (LinearLayout) rootView.findViewById(R.id.movie_trailer);
+        int[] resource = new int[] {
+                R.drawable.first,
+                R.drawable.second,
+                R.drawable.third,
+                R.drawable.fourth,
+                R.drawable.fifth,
+                R.drawable.first,
+                R.drawable.second,
+                R.drawable.third,
+                R.drawable.fourth,
+                R.drawable.fifth
+        };
+        for (int i = 0; i < resource.length; i++) {
+            View casts = LayoutInflater.from(getActivity()).inflate(R.layout.movie_cast, container, false);
+            ImageView castPortrait = (ImageView) casts.findViewById(R.id.cast_portrait);
+            castPortrait.setImageResource(resource[i]);
+            TextView castName = (TextView) casts.findViewById(R.id.cast_name);
+            castName.setText("Name " + i);
+            mTrailers.addView(casts);
+        }
+    }
     public void fetchAdditionalMovieData(int movieIdForQuery, TextView genreView, TextView runtimeView) {
         FetchMovieAddtionalInfoTask task = new FetchMovieAddtionalInfoTask(genreView, runtimeView);
         task.execute(Integer.toString(movieIdForQuery));

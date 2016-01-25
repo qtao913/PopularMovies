@@ -41,6 +41,7 @@ public class MovieDetailInfoFragment extends Fragment implements
     private YouTubeThumbnailView mYoutubeThumbnailView;
     private Uri currentUri;
     private LinearLayout mTrailers;
+    private LinearLayout mCasts;
 
     public static MovieDetailInfoFragment create (Uri uri) {
         MovieDetailInfoFragment fragment = new MovieDetailInfoFragment();
@@ -63,12 +64,29 @@ public class MovieDetailInfoFragment extends Fragment implements
         mYoutubeThumbnailView.initialize(BuildConfig.YOUTUBE_ANDROID_API_KEY, this);
 
         //test horizontal scroll view
+        setMovieTrailerView(rootView, container);
         setMovieCastView(rootView, container);
         return rootView;
     }
 
+    private void setMovieTrailerView(View rootView, ViewGroup container) {
+        mTrailers = (LinearLayout) rootView.findViewById(R.id.movie_trailers);
+        String[] ids = new String[] {
+                TEST_VIDEO_ID,
+                TEST_VIDEO_ID,
+                TEST_VIDEO_ID
+        };
+        for (String id : ids) {
+            View trailer = LayoutInflater.from(getActivity())
+                    .inflate(R.layout.youtube_thumbnail_view, container, false);
+            YouTubeThumbnailView testView = (YouTubeThumbnailView) trailer.findViewById(R.id.youtube_thumbnail_item);
+            testView.initialize(BuildConfig.YOUTUBE_ANDROID_API_KEY, this);
+            mTrailers.addView(trailer);
+        }
+    }
+
     private void setMovieCastView(View rootView, ViewGroup container) {
-        mTrailers = (LinearLayout) rootView.findViewById(R.id.movie_trailer);
+        mCasts = (LinearLayout) rootView.findViewById(R.id.movie_casts);
         int[] resource = new int[] {
                 R.drawable.first,
                 R.drawable.second,
@@ -87,7 +105,7 @@ public class MovieDetailInfoFragment extends Fragment implements
             castPortrait.setImageResource(resource[i]);
             TextView castName = (TextView) casts.findViewById(R.id.cast_name);
             castName.setText("Name " + i);
-            mTrailers.addView(casts);
+            mCasts.addView(casts);
         }
     }
     public void fetchAdditionalMovieData(int movieIdForQuery, TextView genreView, TextView runtimeView) {

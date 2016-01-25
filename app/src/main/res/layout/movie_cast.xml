@@ -4,8 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingLeft="4dp"
-    android:paddingRight="4dp"
-    android:id="@+id/movie_cast_intro">
+    android:paddingRight="4dp">
 
     <ImageView
         android:layout_width="match_parent"

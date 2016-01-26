@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="8dp"
     android:orientation="vertical"
     tools:context="com.example.android.popularmovies.MovieDetailActivity$PlaceholderFragment">
 
@@ -190,7 +189,8 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:scrollbarSize="3sp">
 
                 <LinearLayout
                     android:id="@+id/movie_trailers"
@@ -213,7 +213,8 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:scrollbarSize="3sp">
 
                 <LinearLayout
                     android:id="@+id/movie_casts"
@@ -221,7 +222,17 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal" />
             </HorizontalScrollView>
-        </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="8dp"
+                android:layout_marginBottom="20dp"
+                android:text="Reviews"
+                android:textColor="#F4A460"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

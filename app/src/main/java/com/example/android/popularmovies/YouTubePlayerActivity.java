@@ -59,7 +59,7 @@ public class YouTubePlayerActivity extends YouTubeBaseActivity
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
         if (!wasRestored && youTubeId != null) {
             youTubePlayer.cueVideo(youTubeId);
-            youTubePlayer.setFullscreen(true);
+//            youTubePlayer.setFullscreen(true);
         }
     }
 

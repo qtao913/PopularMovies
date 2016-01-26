@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.data.MovieContract;
@@ -206,6 +207,10 @@ public class MovieDetailInfoFragment extends Fragment implements
                     @Override
                     public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
                         youTubeThumbnailLoader.release();
+                        RelativeLayout parentView = (RelativeLayout)youTubeThumbnailView.getParent();
+                        ImageView buttonView = (ImageView)parentView.findViewById(R.id.play_button);
+                        buttonView.setVisibility(View.VISIBLE);
+
                     }
 
                     @Override

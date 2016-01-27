@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieAddtionalInfoTask;
+import com.example.android.popularmovies.fetchRawJSON.FetchMovieCastTask;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieGalleryTask;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
@@ -42,7 +43,6 @@ public class MovieDetailInfoFragment extends Fragment implements
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Uri currentUri;
     private LinearLayout mTrailers;
-    private LinearLayout mCasts;
     private YouTubeThumbnailView[] trailerThumbnailViews;
 
     private String[] ids = new String[] {
@@ -70,7 +70,6 @@ public class MovieDetailInfoFragment extends Fragment implements
 
         //test horizontal scroll view
         setMovieTrailerView(rootView, container);
-        setMovieCastView(rootView, container);
         return rootView;
     }
 
@@ -88,29 +87,6 @@ public class MovieDetailInfoFragment extends Fragment implements
         }
     }
 
-    private void setMovieCastView(View rootView, ViewGroup container) {
-        mCasts = (LinearLayout) rootView.findViewById(R.id.movie_casts);
-        int[] resource = new int[] {
-                R.drawable.first,
-                R.drawable.second,
-                R.drawable.third,
-                R.drawable.fourth,
-                R.drawable.fifth,
-                R.drawable.first,
-                R.drawable.second,
-                R.drawable.third,
-                R.drawable.fourth,
-                R.drawable.fifth
-        };
-        for (int i = 0; i < resource.length; i++) {
-            View casts = LayoutInflater.from(getActivity()).inflate(R.layout.movie_cast, container, false);
-            ImageView castPortrait = (ImageView) casts.findViewById(R.id.cast_portrait);
-            castPortrait.setImageResource(resource[i]);
-            TextView castName = (TextView) casts.findViewById(R.id.cast_name);
-            castName.setText("Name " + i);
-            mCasts.addView(casts);
-        }
-    }
     public void fetchAdditionalMovieData(int movieIdForQuery, TextView genreView, TextView runtimeView) {
         FetchMovieAddtionalInfoTask task = new FetchMovieAddtionalInfoTask(genreView, runtimeView);
         task.execute(Integer.toString(movieIdForQuery));
@@ -120,6 +96,12 @@ public class MovieDetailInfoFragment extends Fragment implements
         FetchMovieGalleryTask galleryTask = new FetchMovieGalleryTask(
                 getActivity(), (ViewPager) getView().findViewById(R.id.pager));
         galleryTask.execute(Integer.toString(movieIdForQuery));
+    }
+
+    public void fetchMovieCastTask(int movieIdForQuery) {
+        FetchMovieCastTask castTask = new FetchMovieCastTask(
+                getView(), (ViewGroup) getView().getParent(), getActivity());
+        castTask.execute(Integer.toString(movieIdForQuery));
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -145,6 +127,9 @@ public class MovieDetailInfoFragment extends Fragment implements
 
             //query the image gallary
             fetchMovieGallery(mid);
+
+            //query the cast portrait
+            fetchMovieCastTask(mid);
 
             TextView titleView = (TextView)getView().findViewById(R.id.movie_title);
             String title = data.getString(

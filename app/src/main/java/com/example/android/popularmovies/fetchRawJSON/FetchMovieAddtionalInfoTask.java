@@ -61,9 +61,9 @@ public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, String[
                     .appendPath(params[0])
                     .appendQueryParameter(APIID_PARAM, BuildConfig.POPULAR_MOVIES_API_KEY)
                     .build();
-        String rowJsonData = Utility.fetchRowJson(buildUri);
+        String rawJsonData = Utility.fetchRawJson(buildUri);
         try {
-            return getDataFromJson(rowJsonData);
+            return getDataFromJson(rawJsonData);
         } catch (JSONException e) {
             e.printStackTrace();
         }

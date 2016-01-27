@@ -23,7 +23,7 @@ public class Utility {
                 context.getString(R.string.most_popular_value));
     }
 
-    public static String fetchRowJson(Uri uri){
+    public static String fetchRawJson(Uri uri){
         final String LOG_TAG = Utility.class.getSimpleName() + " fetch Row Json";
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;

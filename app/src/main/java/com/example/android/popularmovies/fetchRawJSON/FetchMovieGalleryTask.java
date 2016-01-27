@@ -31,7 +31,8 @@ public class FetchMovieGalleryTask extends AsyncTask<String, Void, String[]> {
     private String[] getDataFromJson(String movieJsonStr) throws JSONException {
         final String LOG_TAG = FetchMovieGalleryTask.class.getSimpleName();
         final String IMAGE_PATH_BASE = "http://image.tmdb.org/t/p/";
-        final String DEFAULT_SIZE = "w342/";
+//        final String DEFAULT_SIZE = "w500/";
+        final String DEFAULT_SIZE = "w780/";
         final String OBJECT_NAME = "backdrops";
         final String IMAGE_PATH = "file_path";
         String[] result = null;
@@ -66,7 +67,7 @@ public class FetchMovieGalleryTask extends AsyncTask<String, Void, String[]> {
                 .appendPath(IMAGE)
                 .appendQueryParameter(APIID_PARAM, BuildConfig.POPULAR_MOVIES_API_KEY)
                 .build();
-        String rawJsonData = Utility.fetchRowJson(buildUri);
+        String rawJsonData = Utility.fetchRawJson(buildUri);
         try {
             return getDataFromJson(rawJsonData);
         } catch (JSONException e) {

@@ -29,6 +29,7 @@ import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieAddtionalInfoTask;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieGalleryTask;
 import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.squareup.picasso.Picasso;
@@ -198,9 +199,11 @@ public class MovieDetailInfoFragment extends Fragment implements
                 youTubeThumbnailView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent playYoutube = new Intent(getActivity(), YouTubePlayerActivity.class);
-                        playYoutube.putExtra("youtube path", viewPath);
-                        startActivity(playYoutube);
+//                        Intent playYoutube = new Intent(getActivity(), YouTubePlayerActivity.class);
+//                        playYoutube.putExtra("youtube path", viewPath);
+//                        startActivity(playYoutube);
+                        Intent intent = YouTubeStandalonePlayer.createVideoIntent(getActivity(),BuildConfig.YOUTUBE_ANDROID_API_KEY, viewPath, 0, true, false);
+                        startActivity(intent);
                     }
                 });
                 youTubeThumbnailLoader.setOnThumbnailLoadedListener(new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {

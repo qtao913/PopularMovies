@@ -123,7 +123,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
                     .appendQueryParameter(SORT_PARAM, params[0])
                     .appendQueryParameter(APIID_PARAM, BuildConfig.POPULAR_MOVIES_API_KEY)
                     .build();
-        String rawJsonData = Utility.fetchRowJson(buildUri);
+        String rawJsonData = Utility.fetchRawJson(buildUri);
         try {
             getMovieDataFromJson(rawJsonData);
         } catch (JSONException e) {

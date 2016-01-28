@@ -85,6 +85,9 @@ public class FetchMovieCastTask extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         LinearLayout castView = (LinearLayout) rootView.findViewById(R.id.movie_casts);
+        if (castView.getChildCount() == castPortrait.length)
+            return;
+        castView.removeAllViews();
         for (int i = 0; i < castName.length; i++) {
             View casts = LayoutInflater.from(activity).inflate(R.layout.movie_cast, container, false);
             ImageView castPortraitView = (ImageView) casts.findViewById(R.id.cast_portrait);

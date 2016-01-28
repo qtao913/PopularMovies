@@ -29,6 +29,7 @@ import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieAddtionalInfoTask;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieCastTask;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieGalleryTask;
+import com.example.android.popularmovies.fetchRawJSON.FetchMovieTrailerTask;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
@@ -69,7 +70,7 @@ public class MovieDetailInfoFragment extends Fragment implements
         collapsingToolbarLayout.setTitle("Movie Detail");
 
         //test horizontal scroll view
-        setMovieTrailerView(rootView, container);
+        //setMovieTrailerView(rootView, container);
         return rootView;
     }
 
@@ -103,12 +104,18 @@ public class MovieDetailInfoFragment extends Fragment implements
                 getView(), (ViewGroup) getView().getParent(), getActivity());
         castTask.execute(Integer.toString(movieIdForQuery));
     }
+
+    public void fetchMovieTrailerTask(int movieIdForQuery) {
+        FetchMovieTrailerTask trailerTask = new FetchMovieTrailerTask(
+                getView(), (ViewGroup) getView().getParent(), getActivity());
+        trailerTask.execute(Integer.toString(movieIdForQuery));
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(DETAIL_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
-
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -130,6 +137,9 @@ public class MovieDetailInfoFragment extends Fragment implements
 
             //query the cast portrait
             fetchMovieCastTask(mid);
+
+            //query movie trailer
+            fetchMovieTrailerTask(mid);
 
             TextView titleView = (TextView)getView().findViewById(R.id.movie_title);
             String title = data.getString(

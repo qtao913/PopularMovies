@@ -233,7 +233,8 @@
                 android:text="Reviews"
                 android:textColor="#F4A460"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:id="@+id/review_view"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

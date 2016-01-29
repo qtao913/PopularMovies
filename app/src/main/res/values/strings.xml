@@ -19,4 +19,5 @@
         <xliff:g id="colon"> \u003A </xliff:g>
     </string>
     <string name="title_activity_you_tube_player">YouTubePlayerActivity</string>
+    <string name="title_activity_movie_review">MovieReviewActivity</string>
 </resources>

@@ -36,7 +36,11 @@
 
         <activity
             android:name=".YouTubePlayerActivity"
-            android:label="@string/title_activity_you_tube_player">
+            android:label="@string/title_activity_you_tube_player" >
+        </activity>
+        <activity
+            android:name=".MovieReviewActivity"
+            android:label="@string/title_activity_movie_review" >
         </activity>
     </application>
 

@@ -176,6 +176,15 @@ public class MovieDetailInfoFragment extends Fragment implements
             TextView ratingView = (TextView) getView().findViewById(R.id.movie_rating);
             ratingView.setText(Double.toString(data.getDouble(
                     data.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING))));
+
+            TextView reviewButton = (TextView)getView().findViewById(R.id.review_view);
+            reviewButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), MovieReviewActivity.class);
+                    startActivity(intent);
+                }
+            });
         }
     }
 

@@ -2,7 +2,9 @@ package com.example.android.popularmovies;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -12,17 +14,15 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.data.MovieContract;
@@ -30,27 +30,13 @@ import com.example.android.popularmovies.fetchRawJSON.FetchMovieAddtionalInfoTas
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieCastTask;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieGalleryTask;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieTrailerTask;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubeStandalonePlayer;
-import com.google.android.youtube.player.YouTubeThumbnailLoader;
-import com.google.android.youtube.player.YouTubeThumbnailView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-public class MovieDetailInfoFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, YouTubeThumbnailView.OnInitializedListener {
+public class MovieDetailInfoFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int DETAIL_LOADER = 0;
-    private static final String TEST_VIDEO_ID = "o7VVHhK9zf0";
     private Toolbar detailViewToolBar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Uri currentUri;
-    private LinearLayout mTrailers;
-    private YouTubeThumbnailView[] trailerThumbnailViews;
-
-    private String[] ids = new String[] {
-            "xf8wVezS3JY",
-            "BOVriTeIypQ",
-            "7GqClqvlObY"
-    };
 
     public static MovieDetailInfoFragment create (Uri uri) {
         MovieDetailInfoFragment fragment = new MovieDetailInfoFragment();
@@ -69,23 +55,7 @@ public class MovieDetailInfoFragment extends Fragment implements
         collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsingToolbarLayout);
         collapsingToolbarLayout.setTitle("Movie Detail");
 
-        //test horizontal scroll view
-        //setMovieTrailerView(rootView, container);
         return rootView;
-    }
-
-    private void setMovieTrailerView(View rootView, ViewGroup container) {
-        mTrailers = (LinearLayout) rootView.findViewById(R.id.movie_trailers);
-
-        trailerThumbnailViews = new YouTubeThumbnailView[ids.length];
-        for (int i = 0; i < ids.length; i++) {
-            View trailer = LayoutInflater.from(getActivity())
-                    .inflate(R.layout.youtube_thumbnail_view, container, false);
-            YouTubeThumbnailView testView = (YouTubeThumbnailView) trailer.findViewById(R.id.youtube_thumbnail_item);
-            testView.initialize(BuildConfig.YOUTUBE_ANDROID_API_KEY, this);
-            mTrailers.addView(trailer);
-            trailerThumbnailViews[i] = testView;
-        }
     }
 
     public void fetchAdditionalMovieData(int movieIdForQuery, TextView genreView, TextView runtimeView) {
@@ -141,7 +111,7 @@ public class MovieDetailInfoFragment extends Fragment implements
             //query movie trailer
             fetchMovieTrailerTask(mid);
 
-            TextView titleView = (TextView)getView().findViewById(R.id.movie_title);
+            final TextView titleView = (TextView)getView().findViewById(R.id.movie_title);
             String title = data.getString(
                     data.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
             String releaseDate = data.getString(
@@ -160,17 +130,40 @@ public class MovieDetailInfoFragment extends Fragment implements
             synopsisView.setText(data.getString(
                     data.getColumnIndex(MovieContract.MovieEntry.COLUMN_SYNOPSIS)));
 
-            ImageView posterView = (ImageView) getView().findViewById(R.id.movie_poster);
+            final ImageView posterView = (ImageView) getView().findViewById(R.id.movie_poster);
             ImageView imageToolBar = (ImageView)getView().findViewById(R.id.image_toolbar);
             int index = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMAGE_URL);
             if (data.getString(index) == null) {
                 Picasso.with(getActivity()).load(R.drawable.image_place_holder).resize(480,640)
                         .into(posterView);
-//                    Picasso.with(getActivity()).load(R.drawable.image_place_holder)
-//                            .into(imageToolBar);
             } else {
-                Picasso.with(getActivity()).load(data.getString(index)).into(posterView);
-//                    Picasso.with(getActivity()).load(data.getString(index)).into(imageToolBar);
+                Picasso.with(getActivity()).load(data.getString(index)).into(posterView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Bitmap bitmap = ((BitmapDrawable) posterView.getDrawable()).getBitmap();
+                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                            public void onGenerated(Palette p) {
+                                Palette.Swatch mutedSwatch = p.getMutedSwatch();
+                                Palette.Swatch mutedSwatchDark = p.getDarkMutedSwatch();
+                                if (mutedSwatch != null) {
+                                    int color = mutedSwatch.getRgb();
+                                    titleView.setBackgroundColor(color);
+                                    titleView.setTextColor(mutedSwatch.getTitleTextColor());
+//                                    android.support.v7.widget.Toolbar toolBar = (android.support.v7.widget.Toolbar) getView().findViewById(R.id.movie_detail_toolbar);
+//                                    toolBar.setBackgroundColor(color);
+                                    android.support.design.widget.CollapsingToolbarLayout collapsingToolbar
+                                            = (android.support.design.widget.CollapsingToolbarLayout)getView().findViewById(R.id.collapsingToolbarLayout);
+                                    collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+                                    collapsingToolbarLayout.setContentScrimColor(color);
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError() {
+                    }
+                });
             }
 
             TextView ratingView = (TextView) getView().findViewById(R.id.movie_rating);
@@ -193,51 +186,4 @@ public class MovieDetailInfoFragment extends Fragment implements
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
-    @Override
-    public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView,
-                                        final YouTubeThumbnailLoader youTubeThumbnailLoader) {
-        Log.v("", "Youtube init success");
-        for (int i = 0; i < ids.length; i++) {
-            if (this.trailerThumbnailViews[i] == youTubeThumbnailView) {
-                final String viewPath = ids[i];
-                youTubeThumbnailLoader.setVideo(viewPath);
-                youTubeThumbnailView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        Intent playYoutube = new Intent(getActivity(), YouTubePlayerActivity.class);
-//                        playYoutube.putExtra("youtube path", viewPath);
-//                        startActivity(playYoutube);
-                        Intent intent = YouTubeStandalonePlayer.createVideoIntent(getActivity(),BuildConfig.YOUTUBE_ANDROID_API_KEY, viewPath, 0, true, false);
-                        startActivity(intent);
-                    }
-                });
-                youTubeThumbnailLoader.setOnThumbnailLoadedListener(new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
-                    @Override
-                    public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
-                        youTubeThumbnailLoader.release();
-                        RelativeLayout parentView = (RelativeLayout)youTubeThumbnailView.getParent();
-                        ImageView buttonView = (ImageView)parentView.findViewById(R.id.play_button);
-                        buttonView.setVisibility(View.VISIBLE);
-
-                    }
-
-                    @Override
-                    public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
-                        youTubeThumbnailLoader.release();
-                    }
-                });
-            }
-        }
-    }
-
-    @Override
-    public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView,
-                                        YouTubeInitializationResult youTubeInitializationResult) {
-        Log.v("", "Youtube init failure");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 }

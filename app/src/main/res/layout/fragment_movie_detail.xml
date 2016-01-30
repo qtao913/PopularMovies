@@ -52,7 +52,6 @@
                 android:id="@+id/movie_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#670A0A"
                 android:paddingBottom="8dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"

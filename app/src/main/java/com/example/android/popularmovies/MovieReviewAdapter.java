@@ -51,7 +51,7 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     public void onBindViewHolder(MovieReviewAdapter.ViewHolder viewHolder, int position) {
         viewHolder.mAuthorView.setText(author[position]);
         viewHolder.mContentView.setText(content[position]);
-        setAnimation(viewHolder.cardView, position);
+        //setAnimation(viewHolder.cardView, position);
     }
 
     @Override

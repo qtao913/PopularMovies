@@ -125,7 +125,7 @@ public class MovieDetailInfoFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.moveToFirst()) {
-            int mid = data.getInt(
+            final int mid = data.getInt(
                     data.getColumnIndex(MovieContract.MovieEntry.COLUMN_MID));
             // query the runtime and genre
             TextView genreView = (TextView)getView().findViewById(R.id.movie_genre);
@@ -182,6 +182,7 @@ public class MovieDetailInfoFragment extends Fragment implements
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), MovieReviewActivity.class);
+                    intent.putExtra("movie id", mid);
                     startActivity(intent);
                 }
             });

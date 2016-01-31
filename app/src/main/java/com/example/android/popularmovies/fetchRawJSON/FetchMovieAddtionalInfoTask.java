@@ -3,9 +3,11 @@ package com.example.android.popularmovies.fetchRawJSON;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.BuildConfig;
+import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.Utility;
 
 import org.json.JSONArray;
@@ -15,46 +17,50 @@ import org.json.JSONObject;
 /**
  * Created by qlzh727 on 1/17/16.
  */
-public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, String[]> {
+public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, Void> {
     private final String LOG_TAG = FetchMovieAddtionalInfoTask.class.getSimpleName();
 
     private TextView runtimeView;
     private TextView genreView;
+    private TextView revenueView;
+    private TextView taglineView;
+    private String runtime;
+    private String revenue;
+    private String[] genre;
+    private String tagline;
 
-    public FetchMovieAddtionalInfoTask(TextView genreView, TextView runtimeView) {
-        this.runtimeView = runtimeView;
-        this.genreView = genreView;
+    public FetchMovieAddtionalInfoTask(View rootView) {
+        runtimeView = (TextView) rootView.findViewById(R.id.movie_runtime);
+        genreView = (TextView) rootView.findViewById(R.id.movie_genre);
+        revenueView = (TextView)rootView.findViewById(R.id.movie_revenue);
+        taglineView = (TextView)rootView.findViewById(R.id.movie_tagline);
     }
 
-
-    private String[] getDataFromJson(String movieJsonStr) throws JSONException {
+    private void getDataFromJson(String movieJsonStr) throws JSONException {
         final String MOVIE_GENRE = "genres";
         final String MOVIE_RUNTIME = "runtime";
         final String GENRE_NAME = "name";
-        String[] result = new String[2];
+        final String MOVIE_REVENUE = "revenue";
+        final String MOVIE_TAGLINE = "tagline";
 
         try {
             JSONObject movieJson = new JSONObject(movieJsonStr);
             JSONArray genreArray = movieJson.getJSONArray(MOVIE_GENRE);
-            result[0] = movieJson.getString(MOVIE_RUNTIME) + " min";
-            StringBuilder sb = new StringBuilder();
+            runtime = movieJson.getString(MOVIE_RUNTIME) + " min";
+            revenue = movieJson.getString(MOVIE_REVENUE);
+            tagline = movieJson.getString(MOVIE_TAGLINE);
+            genre = new String[genreArray.length()];
             for (int i = 0; i < genreArray.length(); i++) {
-                JSONObject genreName = genreArray.getJSONObject(i);
-                sb.append(genreName.getString(GENRE_NAME));
-                if (i != genreArray.length() - 1)
-                    sb.append(" | ");
+                genre[i] = genreArray.getJSONObject(i).getString(GENRE_NAME);
             }
-            result[1] = sb.toString();
-
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-        return result;
     }
 
     @Override
-    protected String[] doInBackground(String... params) {
+    protected Void doInBackground(String... params) {
         final String BASE_URL = "http://api.themoviedb.org/3/movie/";
         final String APIID_PARAM = "api_key";
         Uri buildUri = Uri.parse(BASE_URL).buildUpon()
@@ -63,7 +69,7 @@ public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, String[
                     .build();
         String rawJsonData = Utility.fetchRawJson(buildUri);
         try {
-            return getDataFromJson(rawJsonData);
+            getDataFromJson(rawJsonData);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -71,8 +77,17 @@ public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, String[
     }
 
     @Override
-    protected void onPostExecute(String[] strings) {
-        genreView.setText(strings[1]);
-        runtimeView.setText(strings[0]);
+    protected void onPostExecute(Void aVoid) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < genre.length; i++) {
+            sb.append(genre[i]);
+            if (i < genre.length - 1)
+                sb.append(" | ");
+
+        }
+        genreView.setText(sb.toString());
+        runtimeView.setText(runtime);
+        revenueView.setText(revenue);
+        taglineView.setText(tagline);
     }
 }

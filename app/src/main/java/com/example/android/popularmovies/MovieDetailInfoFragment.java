@@ -38,7 +38,6 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Uri currentUri;
 
-
     public static MovieDetailInfoFragment create (Uri uri) {
         MovieDetailInfoFragment fragment = new MovieDetailInfoFragment();
         fragment.currentUri = uri;
@@ -55,12 +54,12 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsingToolbarLayout);
         collapsingToolbarLayout.setTitle("Movie Detail");
-
         return rootView;
     }
 
-    public void fetchAdditionalMovieData(int movieIdForQuery, TextView genreView, TextView runtimeView) {
-        FetchMovieAddtionalInfoTask task = new FetchMovieAddtionalInfoTask(genreView, runtimeView);
+
+    public void fetchAdditionalMovieData(int movieIdForQuery) {
+        FetchMovieAddtionalInfoTask task = new FetchMovieAddtionalInfoTask(getView());
         task.execute(Integer.toString(movieIdForQuery));
     }
 
@@ -95,15 +94,11 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        int backgroundColor;
-        int textColor;
         if (data.moveToFirst()) {
             final int mid = data.getInt(
                     data.getColumnIndex(MovieContract.MovieEntry.COLUMN_MID));
             // query the runtime and genre
-            TextView genreView = (TextView)getView().findViewById(R.id.movie_genre);
-            TextView runtimeView = (TextView)getView().findViewById(R.id.movie_runtime);
-            fetchAdditionalMovieData(mid, genreView, runtimeView);
+            fetchAdditionalMovieData(mid) ;
 
             //query the image gallary
             fetchMovieGallery(mid);
@@ -134,8 +129,13 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
                     data.getColumnIndex(MovieContract.MovieEntry.COLUMN_SYNOPSIS)));
 
             TextView ratingView = (TextView) getView().findViewById(R.id.movie_rating);
-            ratingView.setText(Double.toString(data.getDouble(
-                    data.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING))));
+            String rating = Double.toString(data.getDouble(data.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING)));
+            String fullMark = getString(R.string.rating_criteria);
+            ratingView.setText(String.format(fullMark, rating));
+
+            TextView releaseView = (TextView)getView().findViewById(R.id.movie_release);
+            releaseView.setText(data.getString(
+                    data.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE)));
 
             final TextView reviewButton = (TextView)getView().findViewById(R.id.review_view);
             reviewButton.setOnClickListener(new View.OnClickListener() {

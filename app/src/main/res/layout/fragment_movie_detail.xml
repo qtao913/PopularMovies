@@ -117,7 +117,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="horizontal"
-                    android:paddingLeft="20dp"
                     android:paddingRight="4dp">
 
                     <LinearLayout
@@ -133,16 +132,26 @@
                             android:gravity="center_vertical|right"
                             android:text="@string/movie_rating"
                             android:textColor="#000000"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:textSize="14sp" />
 
-                        <Button
-                            android:id="@+id/add_to_favorite"
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="center_vertical|right"
-                            android:text="\u2605" />
+                            android:text="@string/movie_revenue"
+                            android:textColor="#000000"
+                            android:textSize="14sp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical|right"
+                            android:text="@string/movie_release"
+                            android:textColor="#000000"
+                            android:textSize="14sp"/>
+
 
                     </LinearLayout>
 
@@ -164,17 +173,48 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/movie_revenue"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="center_vertical|left"
-                            android:text="@string/add_to_favorite"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/movie_release"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical|left"
+                            android:textColor="#000000"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
                 </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="8dp"
+                android:text="@string/movie_tagline"
+                android:textColor="#F4A460"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/movie_tagline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="8dp"
+                android:textColor="#000000"
+                android:textSize="16sp" />
 
             <TextView
                 android:layout_width="match_parent"

@@ -14,7 +14,7 @@
     <string name="most_popular_label">Most Popular</string>
     <string name="most_popular_value" translatable = "false">popularity.desc</string>
     <string name="highest_rated_value" translatable = "false">vote_average.desc</string>
-    <string name="add_to_favorite">Add to Personal Favorite Movie List</string>
+    <string name="add_to_favorite">Add to Favorite</string>
     <string name="movie_rating">Rating
         <xliff:g id="colon"> \u003A </xliff:g>
     </string>
@@ -23,4 +23,14 @@
     <string name="movie_id" translatable = "false">movie id</string>
     <string name="background_color" translatable = "false">background color</string>
     <string name="text_color" translatable = "false">text color</string>
+    <string name="movie_revenue">Revenue
+        <xliff:g id="colon"> \u003A </xliff:g>
+    </string>
+    <string name="movie_release">Release
+        <xliff:g id="colon"> \u003A </xliff:g>
+    </string>
+    <string name="rating_criteria"> %1$s
+        <xliff:g id="full_mark"> / 10</xliff:g>
+    </string>
+    <string name="movie_tagline">Tagline</string>
 </resources>

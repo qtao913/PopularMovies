@@ -33,4 +33,7 @@
         <xliff:g id="full_mark"> / 10</xliff:g>
     </string>
     <string name="movie_tagline">Tagline</string>
+    <string name="more_movie_info">More Information</string>
+    <string name="movie_review">Read User Reviews</string>
+    <string name="movie_homepage">Visit Official Website</string>
 </resources>

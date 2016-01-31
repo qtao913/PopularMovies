@@ -1,9 +1,12 @@
 package com.example.android.popularmovies.fetchRawJSON;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.BuildConfig;
@@ -19,21 +22,27 @@ import org.json.JSONObject;
  */
 public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, Void> {
     private final String LOG_TAG = FetchMovieAddtionalInfoTask.class.getSimpleName();
-
+    private final int MAX_GENRE_LEN = 3;
     private TextView runtimeView;
     private TextView genreView;
     private TextView revenueView;
     private TextView taglineView;
+    private Button homepageButton;
     private String runtime;
     private String revenue;
     private String[] genre;
     private String tagline;
+    private String homepage;
+    private Activity activity;
 
-    public FetchMovieAddtionalInfoTask(View rootView) {
+
+    public FetchMovieAddtionalInfoTask(Activity activity, View rootView) {
+        this.activity = activity;
         runtimeView = (TextView) rootView.findViewById(R.id.movie_runtime);
         genreView = (TextView) rootView.findViewById(R.id.movie_genre);
         revenueView = (TextView)rootView.findViewById(R.id.movie_revenue);
         taglineView = (TextView)rootView.findViewById(R.id.movie_tagline);
+        homepageButton = (Button)rootView.findViewById(R.id.homepage_button);
     }
 
     private void getDataFromJson(String movieJsonStr) throws JSONException {
@@ -42,6 +51,7 @@ public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, Void> {
         final String GENRE_NAME = "name";
         final String MOVIE_REVENUE = "revenue";
         final String MOVIE_TAGLINE = "tagline";
+        final String MOVIE_HOMEPAGE = "homepage";
 
         try {
             JSONObject movieJson = new JSONObject(movieJsonStr);
@@ -49,6 +59,7 @@ public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, Void> {
             runtime = movieJson.getString(MOVIE_RUNTIME) + " min";
             revenue = movieJson.getString(MOVIE_REVENUE);
             tagline = movieJson.getString(MOVIE_TAGLINE);
+            homepage = movieJson.getString(MOVIE_HOMEPAGE);
             genre = new String[genreArray.length()];
             for (int i = 0; i < genreArray.length(); i++) {
                 genre[i] = genreArray.getJSONObject(i).getString(GENRE_NAME);
@@ -79,9 +90,10 @@ public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < genre.length; i++) {
+        int len = Math.min(MAX_GENRE_LEN, genre.length);
+        for (int i = 0; i < len; i++) {
             sb.append(genre[i]);
-            if (i < genre.length - 1)
+            if (i < len - 1)
                 sb.append(" | ");
 
         }
@@ -89,5 +101,14 @@ public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, Void> {
         runtimeView.setText(runtime);
         revenueView.setText(revenue);
         taglineView.setText(tagline);
+        homepageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(homepage));
+                if (intent.resolveActivity(activity.getPackageManager()) != null) {
+                    activity.startActivity(intent);
+                }
+            }
+        });
     }
 }

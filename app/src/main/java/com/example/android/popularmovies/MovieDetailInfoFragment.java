@@ -22,6 +22,7 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
     private Toolbar detailViewToolBar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Uri currentUri;
+    public static int BACKGROUNd_SANDY_BROWN = 16032864;
 
     public static MovieDetailInfoFragment create (Uri uri) {
         MovieDetailInfoFragment fragment = new MovieDetailInfoFragment();
@@ -59,7 +61,7 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
 
 
     public void fetchAdditionalMovieData(int movieIdForQuery) {
-        FetchMovieAddtionalInfoTask task = new FetchMovieAddtionalInfoTask(getView());
+        FetchMovieAddtionalInfoTask task = new FetchMovieAddtionalInfoTask(getActivity(), getView());
         task.execute(Integer.toString(movieIdForQuery));
     }
 
@@ -137,7 +139,7 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
             releaseView.setText(data.getString(
                     data.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE)));
 
-            final TextView reviewButton = (TextView)getView().findViewById(R.id.review_view);
+            final Button reviewButton = (Button)getView().findViewById(R.id.review_button);
             reviewButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

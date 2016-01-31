@@ -204,8 +204,7 @@
                 android:paddingLeft="8dp"
                 android:text="@string/movie_tagline"
                 android:textColor="#F4A460"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/movie_tagline"
@@ -223,8 +222,7 @@
                 android:paddingLeft="8dp"
                 android:text="Trailer"
                 android:textColor="#F4A460"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="20sp" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -247,8 +245,7 @@
                 android:paddingLeft="8dp"
                 android:text="Top Cast"
                 android:textColor="#F4A460"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="20sp" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -267,13 +264,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="10dp"
                 android:paddingLeft="8dp"
-                android:layout_marginBottom="20dp"
-                android:text="Reviews"
+                android:text="@string/more_movie_info"
                 android:textColor="#F4A460"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:id="@+id/review_view"/>
+                android:textSize="20sp"
+                android:id="@+id/movie_more_info"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="@string/movie_review"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:id="@+id/review_button"
+                android:gravity="left|center_vertical"
+                style="?android:attr/borderlessButtonStyle"
+                android:background="@drawable/button_custom"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="@string/movie_homepage"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:gravity="left|center_vertical"
+                android:id="@+id/homepage_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:background="@drawable/button_custom"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

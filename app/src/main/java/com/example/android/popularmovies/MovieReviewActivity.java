@@ -11,6 +11,7 @@ import com.example.android.popularmovies.fetchRawJSON.FetchMovieReviewTask;
 
 
 public class MovieReviewActivity extends ActionBarActivity {
+
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     @Override
@@ -22,7 +23,7 @@ public class MovieReviewActivity extends ActionBarActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         FetchMovieReviewTask fetchMovieReviewTask = new FetchMovieReviewTask(this, mRecyclerView);
-        int mid = getIntent().getIntExtra("movie id", -1);
+        int mid = getIntent().getIntExtra(getString(R.string.movie_id), -1);
         fetchMovieReviewTask.execute(Integer.toString(mid));
     }
 

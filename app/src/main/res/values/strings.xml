@@ -20,4 +20,7 @@
     </string>
     <string name="title_activity_you_tube_player">YouTubePlayerActivity</string>
     <string name="title_activity_movie_review">MovieReviewActivity</string>
+    <string name="movie_id" translatable = "false">movie id</string>
+    <string name="background_color" translatable = "false">background color</string>
+    <string name="text_color" translatable = "false">text color</string>
 </resources>

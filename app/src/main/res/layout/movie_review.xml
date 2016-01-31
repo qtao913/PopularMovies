@@ -8,7 +8,6 @@
     app:cardUseCompatPadding="true"
     card_view:cardCornerRadius="5dp"
     card_view:cardElevation="5dp"
-    card_view:cardBackgroundColor = "#FFA07A"
     android:id="@+id/review_card_view">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -20,7 +19,7 @@
             android:id="@+id/review_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:paddingBottom="8dp"
             android:gravity="center"
             android:textSize="20sp"
             android:textColor="#000000"/>
@@ -29,6 +28,7 @@
             android:id="@+id/review_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
             android:gravity="center"
             android:textSize="16sp"
             android:textColor="#000000"/>

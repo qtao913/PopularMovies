@@ -15,17 +15,15 @@
 
     <com.google.android.youtube.player.YouTubeThumbnailView
         android:id="@+id/youtube_thumbnail_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="267dp"
+        android:layout_height="150dp"/>
 
     <ImageView
         android:id="@+id/play_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="267dp"
+        android:layout_height="150dp"
         android:src="@drawable/play_button"
         android:adjustViewBounds="true"
-        android:maxWidth="240dp"
-        android:maxHeight="120dp"
         android:scaleType="fitCenter"
         android:visibility="invisible"/>
     </RelativeLayout>

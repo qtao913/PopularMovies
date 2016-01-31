@@ -105,7 +105,7 @@ public class FetchMovieGalleryTask extends AsyncTask<String, Void, String[]> {
             public void run() {
                 handler.post(swipe);
             }
-        }, 1000, 3000);
+        }, 6000, 6000);
     }
 }
 

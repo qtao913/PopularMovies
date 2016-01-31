@@ -19,6 +19,8 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     private String[] content;
     private int lastPosition = -1;
     private Activity activity;
+    private int backgroundColor;
+    private int textColor;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mAuthorView;
@@ -36,6 +38,10 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
         this.author = author;
         this.content = content;
         this.activity = activity;
+        this.backgroundColor = activity.getIntent().getIntExtra(
+                activity.getString(R.string.background_color), -1);
+        this.textColor = activity.getIntent().getIntExtra(
+                activity.getString(R.string.text_color), -1);
     }
 
     @Override
@@ -51,6 +57,15 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     public void onBindViewHolder(MovieReviewAdapter.ViewHolder viewHolder, int position) {
         viewHolder.mAuthorView.setText(author[position]);
         viewHolder.mContentView.setText(content[position]);
+        if (backgroundColor != -1) {
+//            viewHolder.cardView.setBackgroundColor(backgroundColor);
+            viewHolder.mAuthorView.setBackgroundColor(backgroundColor);
+            viewHolder.mContentView.setBackgroundColor(backgroundColor);
+        }
+        if (textColor != -1) {
+            viewHolder.mAuthorView.setTextColor(textColor);
+            viewHolder.mContentView.setTextColor(textColor);
+        }
         //setAnimation(viewHolder.cardView, position);
     }
 

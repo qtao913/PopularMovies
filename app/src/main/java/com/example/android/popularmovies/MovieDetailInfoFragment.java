@@ -38,6 +38,7 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Uri currentUri;
 
+
     public static MovieDetailInfoFragment create (Uri uri) {
         MovieDetailInfoFragment fragment = new MovieDetailInfoFragment();
         fragment.currentUri = uri;
@@ -94,6 +95,8 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        int backgroundColor;
+        int textColor;
         if (data.moveToFirst()) {
             final int mid = data.getInt(
                     data.getColumnIndex(MovieContract.MovieEntry.COLUMN_MID));
@@ -130,6 +133,20 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
             synopsisView.setText(data.getString(
                     data.getColumnIndex(MovieContract.MovieEntry.COLUMN_SYNOPSIS)));
 
+            TextView ratingView = (TextView) getView().findViewById(R.id.movie_rating);
+            ratingView.setText(Double.toString(data.getDouble(
+                    data.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING))));
+
+            final TextView reviewButton = (TextView)getView().findViewById(R.id.review_view);
+            reviewButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), MovieReviewActivity.class);
+                    intent.putExtra(getString(R.string.movie_id), mid);
+                    startActivity(intent);
+                }
+            });
+
             final ImageView posterView = (ImageView) getView().findViewById(R.id.movie_poster);
             ImageView imageToolBar = (ImageView)getView().findViewById(R.id.image_toolbar);
             int index = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMAGE_URL);
@@ -144,17 +161,26 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
                         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                             public void onGenerated(Palette p) {
                                 Palette.Swatch mutedSwatch = p.getMutedSwatch();
-                                Palette.Swatch mutedSwatchDark = p.getDarkMutedSwatch();
                                 if (mutedSwatch != null) {
-                                    int color = mutedSwatch.getRgb();
-                                    titleView.setBackgroundColor(color);
-                                    titleView.setTextColor(mutedSwatch.getTitleTextColor());
-//                                    android.support.v7.widget.Toolbar toolBar = (android.support.v7.widget.Toolbar) getView().findViewById(R.id.movie_detail_toolbar);
-//                                    toolBar.setBackgroundColor(color);
+                                    final int backgroundColor = mutedSwatch.getRgb();
+                                    final int textColor = mutedSwatch.getTitleTextColor();
+                                    titleView.setBackgroundColor(backgroundColor);
+                                    titleView.setTextColor(textColor);
                                     android.support.design.widget.CollapsingToolbarLayout collapsingToolbar
                                             = (android.support.design.widget.CollapsingToolbarLayout)getView().findViewById(R.id.collapsingToolbarLayout);
                                     collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-                                    collapsingToolbarLayout.setContentScrimColor(color);
+                                    collapsingToolbarLayout.setContentScrimColor(backgroundColor);
+
+                                    reviewButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(getActivity(), MovieReviewActivity.class);
+                                            intent.putExtra(getString(R.string.movie_id), mid);
+                                            intent.putExtra(getString(R.string.background_color), backgroundColor);
+                                            intent.putExtra(getString(R.string.text_color), textColor);
+                                            startActivity(intent);
+                                        }
+                                    });
                                 }
                             }
                         });
@@ -165,20 +191,6 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
                     }
                 });
             }
-
-            TextView ratingView = (TextView) getView().findViewById(R.id.movie_rating);
-            ratingView.setText(Double.toString(data.getDouble(
-                    data.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING))));
-
-            TextView reviewButton = (TextView)getView().findViewById(R.id.review_view);
-            reviewButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), MovieReviewActivity.class);
-                    intent.putExtra("movie id", mid);
-                    startActivity(intent);
-                }
-            });
         }
     }
 

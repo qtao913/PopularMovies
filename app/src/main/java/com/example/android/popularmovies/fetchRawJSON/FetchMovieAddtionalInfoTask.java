@@ -100,6 +100,8 @@ public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, Void> {
         genreView.setText(sb.toString());
         runtimeView.setText(runtime);
         revenueView.setText(revenue);
+        if (tagline.equals(""))
+            tagline = activity.getString(R.string.tagline_not_available);
         taglineView.setText(tagline);
         homepageButton.setOnClickListener(new View.OnClickListener() {
             @Override

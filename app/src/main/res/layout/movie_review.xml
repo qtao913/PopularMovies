@@ -6,21 +6,25 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     app:cardUseCompatPadding="true"
-    card_view:cardCornerRadius="5dp"
+    card_view:cardCornerRadius="2dp"
     card_view:cardElevation="5dp"
+    android:background="@color/bright_foreground_material_dark"
     android:id="@+id/review_card_view">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp">
 
         <TextView
             android:id="@+id/review_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
-            android:gravity="center"
             android:textSize="20sp"
             android:textColor="#000000"/>
 
@@ -29,7 +33,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
-            android:gravity="center"
             android:textSize="16sp"
             android:textColor="#000000"/>
 

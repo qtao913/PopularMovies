@@ -172,17 +172,6 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
                                             = (android.support.design.widget.CollapsingToolbarLayout)getView().findViewById(R.id.collapsingToolbarLayout);
                                     collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
                                     collapsingToolbarLayout.setContentScrimColor(backgroundColor);
-
-                                    reviewButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent intent = new Intent(getActivity(), MovieReviewActivity.class);
-                                            intent.putExtra(getString(R.string.movie_id), mid);
-                                            intent.putExtra(getString(R.string.background_color), backgroundColor);
-                                            intent.putExtra(getString(R.string.text_color), textColor);
-                                            startActivity(intent);
-                                        }
-                                    });
                                 }
                             }
                         });

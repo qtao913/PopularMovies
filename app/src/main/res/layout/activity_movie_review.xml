@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:id="@+id/review_recycler_view"
     android:scrollbars="vertical"
-    android:background="@color/background_material_dark"
+    android:background="@color/background_material_light"
     tools:context="com.example.android.popularmovies.MovieReviewActivity">
 
 </android.support.v7.widget.RecyclerView>

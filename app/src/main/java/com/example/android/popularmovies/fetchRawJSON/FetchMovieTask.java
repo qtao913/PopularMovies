@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import com.example.android.popularmovies.BuildConfig;
@@ -23,9 +24,11 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
     private final Context mContext;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    public FetchMovieTask(Context context) {
+    public FetchMovieTask(Context context, SwipeRefreshLayout swipeRefreshLayout) {
         mContext = context;
+        mSwipeRefreshLayout = swipeRefreshLayout;
     }
 
     // handle insertion of a new Movie record in the Movie database
@@ -130,5 +133,11 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        //This notifies the SwipeRefreshLayout widget that work is done and to stop displaying the loader animation.
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

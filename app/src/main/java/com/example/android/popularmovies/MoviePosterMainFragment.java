@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -17,13 +18,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieTask;
 
-public class MoviePosterMainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MoviePosterMainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public AndroidImageAdapter imageAdapter;
     private static final int MOVIE_LOADER = 0;
     private Toolbar toolbar;
@@ -33,6 +35,7 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
     };
     public static final int COLUMN_IMAGE_URL = 1;
     public static final String SORT_ORDER = MovieContract.MovieEntry._ID + " ASC";
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public MoviePosterMainFragment() {
     }
@@ -66,8 +69,8 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateMovie(){
-        FetchMovieTask fetchMovieTask = new FetchMovieTask(getActivity());
+    private void updateMovie() {
+        FetchMovieTask fetchMovieTask = new FetchMovieTask(getActivity(), mSwipeRefreshLayout);
         String sortingPref = Utility.getPreferredMovieSorting(getActivity());
         fetchMovieTask.execute(sortingPref);
     }
@@ -83,11 +86,21 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)
+                rootView.findViewById(R.id.swipe_refresh_container);
+        //mSwipeRefreshLayout.setSize(SwipeRefreshLayout.LAYOUT_DIRECTION_RTL);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //should erase all the data in the database first before update?
+                updateMovie();
+            }
+        });
         populateMovieListView(rootView);
         return rootView;
     }
 
-    private void populateMovieListView(View rootView) {
+    private void populateMovieListView(final View rootView) {
         imageAdapter = new AndroidImageAdapter(getActivity(), null, 0);
         GridView movieGridView = (GridView) rootView.findViewById(R.id.grid_movie_view);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -97,11 +110,22 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Cursor cursor = (Cursor)parent.getItemAtPosition(position);
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
                 Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
                 cursor.moveToPosition(-1);
                 intent.putExtra("current pos", position);
                 startActivity(intent);
+            }
+        });
+        movieGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
             }
         });
     }

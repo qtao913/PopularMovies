@@ -10,7 +10,7 @@ import com.example.android.popularmovies.data.MovieContract.MovieEntry;
  * Created by qlzh727 on 12/21/15.
  */
 public class MovieDbHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     static final String DATABASE_NAME = "movie.db";
 
@@ -27,7 +27,9 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 MovieEntry.COLUMN_RATING + " REAL, " +
                 MovieEntry.COLUMN_RELEASE + " TEXT, " +
                 MovieEntry.COLUMN_IMAGE_URL + " TEXT, " +
-                "UNIQUE (" + MovieEntry.COLUMN_MID + ") ON CONFLICT REPLACE" +
+                MovieEntry.COLUMN_RANK + " INTEGER NOT NULL, " +
+                "UNIQUE (" + MovieEntry.COLUMN_MID + ") ON CONFLICT REPLACE, " +
+                "UNIQUE (" + MovieEntry.COLUMN_RANK + ") ON CONFLICT REPLACE" +
                 " );";
         db.execSQL(SQL_CREATE_MOVIE_TABLE);
 

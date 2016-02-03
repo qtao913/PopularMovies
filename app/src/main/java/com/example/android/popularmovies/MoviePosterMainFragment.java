@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -25,6 +27,8 @@ import android.widget.GridView;
 import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieTask;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 public class MoviePosterMainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public AndroidImageAdapter imageAdapter;
     private static final int MOVIE_LOADER = 0;
@@ -34,14 +38,20 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
             MovieContract.MovieEntry.COLUMN_IMAGE_URL
     };
     public static final int COLUMN_IMAGE_URL = 1;
-    public static final String SORT_ORDER = MovieContract.MovieEntry._ID + " ASC";
+//    public static final String SORT_ORDER = MovieContract.MovieEntry._ID + " ASC";
+    public static final String SORT_ORDER = MovieContract.MovieEntry.COLUMN_RANK + " ASC";
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private final boolean IS_REFRESH = true;
+    private final boolean IS_NOT_REFRESH = false;
+    private CoordinatorLayout mCoordinatorLayout;
+    private final ReentrantLock lock = new ReentrantLock();
+    private int currentItemLoadingCount = 0;
 
     public MoviePosterMainFragment() {
     }
 
     public void onMovieSortingChanged() {
-        updateMovie();
+        updateMovie(IS_REFRESH, 0);
         getLoaderManager().restartLoader(MOVIE_LOADER, null, this);
     }
 
@@ -60,7 +70,7 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.movie_refresh) {
-            updateMovie();
+            updateMovie(IS_REFRESH, 0);
             return true;
         } else if (id == R.id.action_settings) {
             startActivity(new Intent(getActivity(), SettingsActivity.class));
@@ -69,8 +79,8 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateMovie() {
-        FetchMovieTask fetchMovieTask = new FetchMovieTask(getActivity(), mSwipeRefreshLayout);
+    private void updateMovie(boolean isRefresh, int itemCount) {
+        FetchMovieTask fetchMovieTask = new FetchMovieTask(getActivity(), mSwipeRefreshLayout, isRefresh, itemCount);
         String sortingPref = Utility.getPreferredMovieSorting(getActivity());
         fetchMovieTask.execute(sortingPref);
     }
@@ -84,6 +94,7 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         mSwipeRefreshLayout = (SwipeRefreshLayout)
@@ -93,7 +104,7 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
             @Override
             public void onRefresh() {
                 //should erase all the data in the database first before update?
-                updateMovie();
+                updateMovie(IS_REFRESH, 0);
             }
         });
         populateMovieListView(rootView);
@@ -125,7 +136,12 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+                int total = firstVisibleItem + visibleItemCount;
+                if (total == totalItemCount && total != 0 && currentItemLoadingCount != totalItemCount) {
+                    currentItemLoadingCount = totalItemCount;
+                    updateMovie(IS_NOT_REFRESH, totalItemCount);
+                    Snackbar.make(mCoordinatorLayout, getString(R.string.loading_data), Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
     }

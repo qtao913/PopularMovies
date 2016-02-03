@@ -25,10 +25,25 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
 
     private final Context mContext;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private boolean isRefresh;
+    private int currentItemCount;
 
-    public FetchMovieTask(Context context, SwipeRefreshLayout swipeRefreshLayout) {
+    public FetchMovieTask(Context context, SwipeRefreshLayout swipeRefreshLayout, boolean isRefresh, int itemCount) {
         mContext = context;
         mSwipeRefreshLayout = swipeRefreshLayout;
+        this.isRefresh = isRefresh;
+        currentItemCount = itemCount;
+    }
+
+    private void deleteDatabaseContent() {
+        if (isRefresh) {
+            // delete movies before adding new bulk data
+            mContext.getContentResolver().delete(
+                    MovieEntry.CONTENT_URI,
+                    null,
+                    null
+            );
+        }
     }
 
     // handle insertion of a new Movie record in the Movie database
@@ -55,6 +70,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
             movieValues.put(MovieEntry.COLUMN_RATING, rating);
             movieValues.put(MovieEntry.COLUMN_RELEASE, releaseDate);
             movieValues.put(MovieEntry.COLUMN_IMAGE_URL, imageUrl);
+            movieValues.put(MovieEntry.COLUMN_RANK, currentItemCount);
 
             Uri insertedUri = mContext.getContentResolver().insert(
                     MovieEntry.CONTENT_URI,
@@ -97,14 +113,9 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
                 movieItem.put(MovieEntry.COLUMN_RATING, rating);
                 movieItem.put(MovieEntry.COLUMN_RELEASE, releaseDate);
                 movieItem.put(MovieEntry.COLUMN_IMAGE_URL, imagePath);
+                movieItem.put(MovieEntry.COLUMN_RANK, currentItemCount + i);
                 moviesForDatabase[i] = movieItem;
             }
-            // delete movies before adding new bulk data
-            mContext.getContentResolver().delete(
-                    MovieEntry.CONTENT_URI,
-                    null,
-                    null
-            );
             int rowInserted = 0;
             if (moviesForDatabase.length > 0) {
                 rowInserted = mContext.getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, moviesForDatabase);
@@ -122,9 +133,15 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
         final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
         final String SORT_PARAM = "sort_by";
         final String APIID_PARAM = "api_key";
+        final String PAGE_PARAM = "page";
+        final int COUNT_PER_PAGE = 20;
+        if (isRefresh)
+            deleteDatabaseContent();
+        String page = Integer.toString(currentItemCount / COUNT_PER_PAGE + 1);
         Uri buildUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
                     .appendQueryParameter(SORT_PARAM, params[0])
                     .appendQueryParameter(APIID_PARAM, BuildConfig.POPULAR_MOVIES_API_KEY)
+                    .appendQueryParameter(PAGE_PARAM, page)
                     .build();
         String rawJsonData = Utility.fetchRawJson(buildUri);
         try {

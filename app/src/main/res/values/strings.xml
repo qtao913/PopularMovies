@@ -40,4 +40,5 @@
         <xliff:g id="colon"> \u0028 </xliff:g> Not Available
         <xliff:g id="colon"> \u0029 </xliff:g>
     </string>
+    <string name="loading_data">Loading More Data</string>
 </resources>

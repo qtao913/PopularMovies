@@ -121,9 +121,9 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+//                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+//                cursor.moveToPosition(-1);
                 Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-                cursor.moveToPosition(-1);
                 intent.putExtra("current pos", position);
                 startActivity(intent);
             }

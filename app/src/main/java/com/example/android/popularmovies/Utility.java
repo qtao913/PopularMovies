@@ -10,6 +10,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -65,5 +67,31 @@ public class Utility {
             }
         }
         return movieJsonStr;
+    }
+
+    public static String numberConvert(String num) {
+        final double BILLION = 1000000000.0;
+        final double MILLION = 1000000.0;
+        int number = Integer.parseInt(num);
+        StringBuilder sb = new StringBuilder();
+        if (number >= BILLION) {
+            double n = Utility.round(number / BILLION, 2);
+            sb.append(Double.toString(n));
+            sb.append("\nBillion");
+            return sb.toString();
+        } else if (number >= MILLION) {
+            double n = Utility.round(number / MILLION, 2);
+            sb.append(Double.toString(n));
+            sb.append("\nMillion");
+            return sb.toString();
+        }
+        return Integer.toString(number);
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }

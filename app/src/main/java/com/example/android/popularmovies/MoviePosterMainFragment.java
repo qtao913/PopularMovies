@@ -83,6 +83,9 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         FetchMovieTask fetchMovieTask = new FetchMovieTask(getActivity(), mSwipeRefreshLayout, isRefresh, itemCount);
         String sortingPref = Utility.getPreferredMovieSorting(getActivity());
         fetchMovieTask.execute(sortingPref);
+        if (isRefresh) {
+            currentItemLoadingCount = 0;
+        }
     }
 
     @Override
@@ -138,6 +141,7 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 int total = firstVisibleItem + visibleItemCount;
                 if (total == totalItemCount && total != 0 && currentItemLoadingCount != totalItemCount) {
+//                if (firstVisibleItem == totalItemCount && total != 0 && currentItemLoadingCount != totalItemCount) {
                     currentItemLoadingCount = totalItemCount;
                     updateMovie(IS_NOT_REFRESH, totalItemCount);
                     Snackbar.make(mCoordinatorLayout, getString(R.string.loading_data), Snackbar.LENGTH_SHORT).show();

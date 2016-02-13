@@ -128,6 +128,7 @@ public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void>
                         new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
                             @Override
                             public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+                                Log.v(LOG_TAG, "Youtube loader released");
                                 youTubeThumbnailLoader.release();
                                 RelativeLayout parentView = (RelativeLayout)youTubeThumbnailView.getParent();
                                 ImageView buttonView = (ImageView)parentView.findViewById(R.id.play_button);
@@ -138,6 +139,7 @@ public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void>
                             @Override
                             public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView,
                                                          YouTubeThumbnailLoader.ErrorReason errorReason) {
+                                Log.v(LOG_TAG, "Youtube loader released");
                                 youTubeThumbnailLoader.release();
                             }
                         });

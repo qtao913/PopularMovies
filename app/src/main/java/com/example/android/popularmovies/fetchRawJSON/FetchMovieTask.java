@@ -130,7 +130,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
     }
     @Override
     protected Void doInBackground(String... params) {
-        final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
+        final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/discover/movie";
         final String SORT_PARAM = "sort_by";
         final String APIID_PARAM = "api_key";
         final String PAGE_PARAM = "page";

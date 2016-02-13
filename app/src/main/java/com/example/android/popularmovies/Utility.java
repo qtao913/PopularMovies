@@ -69,10 +69,26 @@ public class Utility {
         return movieJsonStr;
     }
 
+//    public static String fetchJson(Uri uri) {
+//        try {
+//            URL url = new URL(uri.toString());
+//            InputStream is = url.openStream();
+//            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+//            StringBuilder sb = new StringBuilder();
+//            int cp;
+//            while ((cp = rd.read()) != -1) {
+//                sb.append((char) cp);
+//            }
+//            return sb.toString();
+//        } catch (IOException e) {
+//            return null;
+//        }
+//    }
+
     public static String numberConvert(String num) {
         final double BILLION = 1000000000.0;
         final double MILLION = 1000000.0;
-        int number = Integer.parseInt(num);
+        long number = Long.parseLong(num);
         StringBuilder sb = new StringBuilder();
         if (number >= BILLION) {
             double n = Utility.round(number / BILLION, 2);
@@ -85,7 +101,7 @@ public class Utility {
             sb.append("\nMillion");
             return sb.toString();
         }
-        return Integer.toString(number);
+        return Long.toString(number);
     }
 
     public static double round(double value, int places) {

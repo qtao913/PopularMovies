@@ -42,6 +42,8 @@
             android:name=".MovieReviewActivity"
             android:label="@string/title_activity_movie_review" >
         </activity>
+        <service android:name=".service.MovieService"/>
+        <receiver android:name=".service.MovieService$AlarmReceiver" android:enabled="true"/>
     </application>
 
 </manifest>

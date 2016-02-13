@@ -1,6 +1,9 @@
 package com.example.android.popularmovies;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
@@ -26,6 +29,7 @@ import android.widget.GridView;
 
 import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieTask;
+import com.example.android.popularmovies.service.MovieService;
 
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -75,6 +79,9 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         } else if (id == R.id.action_settings) {
             startActivity(new Intent(getActivity(), SettingsActivity.class));
             return true;
+        } else if (id == R.id.movie_testService) {
+            movieUpdateService();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -86,6 +93,15 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         if (isRefresh) {
             currentItemLoadingCount = 0;
         }
+    }
+
+    public void movieUpdateService() {
+        String sortingPref = Utility.getPreferredMovieSorting(getActivity());
+        Intent alarmIntent = new Intent(getActivity(), MovieService.AlarmReceiver.class);
+        alarmIntent.putExtra(MovieService.MOIVE_QUERY_CRITERIA, sortingPref);
+        PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+5000, pi);
     }
 
     @Override

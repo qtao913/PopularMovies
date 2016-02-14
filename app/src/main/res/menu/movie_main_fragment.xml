@@ -7,8 +7,4 @@
         android:id="@+id/movie_refresh"
         android:title="@string/movie_refresh"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/movie_testService"
-        android:title="Start Service"
-        app:showAsAction="never" />
 </menu>

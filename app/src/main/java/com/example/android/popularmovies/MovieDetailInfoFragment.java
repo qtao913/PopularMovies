@@ -41,6 +41,10 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
     private Toolbar detailViewToolBar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Uri currentUri;
+    FetchMovieAddtionalInfoTask addtionalInfoTask;
+    FetchMovieGalleryTask galleryTask;
+    FetchMovieCastTask castTask;
+    FetchMovieTrailerTask trailerTask;
 
     public static MovieDetailInfoFragment create (Uri uri) {
         MovieDetailInfoFragment fragment = new MovieDetailInfoFragment();
@@ -63,24 +67,24 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
 
 
     public void fetchAdditionalMovieData(int movieIdForQuery) {
-        FetchMovieAddtionalInfoTask task = new FetchMovieAddtionalInfoTask(getActivity(), getView());
-        task.execute(Integer.toString(movieIdForQuery));
+        addtionalInfoTask = new FetchMovieAddtionalInfoTask(getActivity(), getView());
+        addtionalInfoTask.execute(Integer.toString(movieIdForQuery));
     }
 
     public void fetchMovieGallery(int movieIdForQuery) {
-        FetchMovieGalleryTask galleryTask = new FetchMovieGalleryTask(
+        galleryTask = new FetchMovieGalleryTask(
                 getActivity(), (ViewPager) getView().findViewById(R.id.pager));
         galleryTask.execute(Integer.toString(movieIdForQuery));
     }
 
     public void fetchMovieCastTask(int movieIdForQuery) {
-        FetchMovieCastTask castTask = new FetchMovieCastTask(
-                getView(), (ViewGroup) getView().getParent(), getActivity().getApplicationContext());
+        castTask = new FetchMovieCastTask(
+                getView(), (ViewGroup) getView().getParent(), getActivity());
         castTask.execute(Integer.toString(movieIdForQuery));
     }
 
     public void fetchMovieTrailerTask(int movieIdForQuery) {
-        FetchMovieTrailerTask trailerTask = new FetchMovieTrailerTask(
+        trailerTask = new FetchMovieTrailerTask(
                 getView(), (ViewGroup) getView().getParent(), getActivity());
         trailerTask.execute(Integer.toString(movieIdForQuery));
     }
@@ -197,4 +201,16 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
+    @Override
+    public void onDestroy() {
+        if (addtionalInfoTask != null)
+            addtionalInfoTask.cancel(true);
+        if (galleryTask != null)
+            galleryTask.cancel(true);
+        if (castTask != null)
+            castTask.cancel(true);
+        if (trailerTask != null)
+            trailerTask.cancel(true);
+        super.onDestroy();
+    }
 }

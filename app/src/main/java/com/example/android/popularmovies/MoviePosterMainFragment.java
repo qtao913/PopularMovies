@@ -115,6 +115,15 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
     }
 
     private void populateMovieListView(final View rootView) {
+        Cursor movieEntries = getActivity().getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        if (!movieEntries.moveToFirst())
+            updateMovie(IS_REFRESH, 0);
         imageAdapter = new AndroidImageAdapter(getActivity(), null, 0);
         GridView movieGridView = (GridView) rootView.findViewById(R.id.grid_movie_view);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

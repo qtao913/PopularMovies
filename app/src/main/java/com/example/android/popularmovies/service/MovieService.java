@@ -110,7 +110,7 @@ public class MovieService extends IntentService {
             Intent sendIntent = new Intent(context, MovieService.class);
             sendIntent.putExtra(MovieService.MOIVE_QUERY_CRITERIA,
                     intent.getStringExtra(MovieService.MOIVE_QUERY_CRITERIA));
-            context.startService(intent);
+            context.startService(sendIntent);
         }
     }
 }

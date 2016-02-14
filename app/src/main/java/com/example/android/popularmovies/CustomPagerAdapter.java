@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 /**
  * Created by qlzh727 on 1/14/16.
@@ -37,8 +37,7 @@ public class CustomPagerAdapter extends PagerAdapter{
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
         ImageView imageView = (ImageView) itemView.findViewById(R.id.image_toolbar);
-        //imageView.setImageResource(mResources[position]);
-        Picasso.with(mContext).load(mResources[position]).into(imageView);
+        Glide.with(mContext).load(mResources[position]).centerCrop().into(imageView);
         container.addView(itemView);
         return itemView;
     }

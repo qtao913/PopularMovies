@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -19,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,19 +26,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieAddtionalInfoTask;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieCastTask;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieGalleryTask;
 import com.example.android.popularmovies.fetchRawJSON.FetchMovieTrailerTask;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 public class MovieDetailInfoFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int DETAIL_LOADER = 0;
     private Toolbar detailViewToolBar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Uri currentUri;
-    public static int BACKGROUNd_SANDY_BROWN = 16032864;
 
     public static MovieDetailInfoFragment create (Uri uri) {
         MovieDetailInfoFragment fragment = new MovieDetailInfoFragment();
@@ -73,7 +75,7 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
 
     public void fetchMovieCastTask(int movieIdForQuery) {
         FetchMovieCastTask castTask = new FetchMovieCastTask(
-                getView(), (ViewGroup) getView().getParent(), getActivity());
+                getView(), (ViewGroup) getView().getParent(), getActivity().getApplicationContext());
         castTask.execute(Integer.toString(movieIdForQuery));
     }
 
@@ -153,34 +155,40 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
             ImageView imageToolBar = (ImageView)getView().findViewById(R.id.image_toolbar);
             int index = data.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMAGE_URL);
             if (data.getString(index) == null) {
-                Picasso.with(getActivity()).load(R.drawable.image_place_holder).resize(480,640)
-                        .into(posterView);
+                Glide.with(getActivity()).load(R.drawable.image_place_holder).centerCrop().into(posterView);
             } else {
-                Picasso.with(getActivity()).load(data.getString(index)).into(posterView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        Bitmap bitmap = ((BitmapDrawable) posterView.getDrawable()).getBitmap();
-                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                            public void onGenerated(Palette p) {
-                                Palette.Swatch mutedSwatch = p.getMutedSwatch();
-                                if (mutedSwatch != null) {
-                                    final int backgroundColor = mutedSwatch.getRgb();
-                                    final int textColor = mutedSwatch.getTitleTextColor();
-                                    titleView.setBackgroundColor(backgroundColor);
-                                    titleView.setTextColor(textColor);
-                                    android.support.design.widget.CollapsingToolbarLayout collapsingToolbar
-                                            = (android.support.design.widget.CollapsingToolbarLayout)getView().findViewById(R.id.collapsingToolbarLayout);
-                                    collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-                                    collapsingToolbarLayout.setContentScrimColor(backgroundColor);
-                                }
-                            }
-                        });
-                    }
+                Glide.with(getActivity())
+                     .load(data.getString(index))
+                     .listener(new RequestListener<String, GlideDrawable>() {
+                         @Override
+                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                             // do something
+                             return false;
+                         }
 
-                    @Override
-                    public void onError() {
-                    }
-                });
+                         @Override
+                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                             Log.v("", resource.getCurrent().getClass().toString());
+                             Bitmap bitmap = ((GlideBitmapDrawable) resource.getCurrent()).getBitmap();
+                             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                                 public void onGenerated(Palette p) {
+                                     Palette.Swatch mutedSwatch = p.getMutedSwatch();
+                                     if (mutedSwatch != null) {
+                                         final int backgroundColor = mutedSwatch.getRgb();
+                                         final int textColor = mutedSwatch.getTitleTextColor();
+                                         titleView.setBackgroundColor(backgroundColor);
+                                         titleView.setTextColor(textColor);
+                                         android.support.design.widget.CollapsingToolbarLayout collapsingToolbar
+                                                 = (android.support.design.widget.CollapsingToolbarLayout) getView().findViewById(R.id.collapsingToolbarLayout);
+                                         collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+                                         collapsingToolbarLayout.setContentScrimColor(backgroundColor);
+                                     }
+                                 }
+                             });
+                             return false;
+                         }
+                     })
+                     .into(posterView);
             }
         }
     }

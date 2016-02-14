@@ -38,7 +38,6 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
             MovieContract.MovieEntry.COLUMN_IMAGE_URL
     };
     public static final int COLUMN_IMAGE_URL = 1;
-//    public static final String SORT_ORDER = MovieContract.MovieEntry._ID + " ASC";
     public static final String SORT_ORDER = MovieContract.MovieEntry.COLUMN_RANK + " ASC";
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private final boolean IS_REFRESH = true;

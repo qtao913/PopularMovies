@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 /**
  * Created by qlzh727 on 12/13/15.
@@ -31,9 +31,9 @@ public class AndroidImageAdapter extends CursorAdapter {
         ImageView imageView = (ImageView)view;
         String imagePath = cursor.getString(MoviePosterMainFragment.COLUMN_IMAGE_URL);
         if (imagePath == null) {
-            Picasso.with(context).load(R.drawable.image_place_holder).fit().into(imageView);
+            Glide.with(context).load(R.drawable.image_place_holder).centerCrop().into(imageView);
         } else {
-            Picasso.with(context).load(imagePath).fit().into(imageView);
+            Glide.with(context).load(imagePath).centerCrop().into(imageView);
         }
     }
 }

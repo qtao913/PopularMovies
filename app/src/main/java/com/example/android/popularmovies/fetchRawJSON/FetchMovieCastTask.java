@@ -1,6 +1,6 @@
 package com.example.android.popularmovies.fetchRawJSON;
 
-import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -11,10 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.popularmovies.BuildConfig;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.Utility;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,16 +22,15 @@ import org.json.JSONObject;
 
 public class FetchMovieCastTask extends AsyncTask<String, Void, Void> {
     private final String LOG_TAG = FetchMovieCastTask.class.getSimpleName();
-//    HashMap<String, String> result;
     String[] castPortrait;
     String[] castName;
     View rootView;
     ViewGroup container;
-    Activity activity;
-    public FetchMovieCastTask(View rootView, ViewGroup container, Activity activity) {
+    Context context;
+    public FetchMovieCastTask(View rootView, ViewGroup container, Context context) {
         this.rootView = rootView;
         this.container = container;
-        this.activity = activity;
+        this.context = context;
     }
 
     private void getDataFromJson(String castJsonStr) throws JSONException {
@@ -89,9 +88,9 @@ public class FetchMovieCastTask extends AsyncTask<String, Void, Void> {
             return;
         castView.removeAllViews();
         for (int i = 0; i < castName.length; i++) {
-            View casts = LayoutInflater.from(activity).inflate(R.layout.movie_cast, container, false);
+            View casts = LayoutInflater.from(context).inflate(R.layout.movie_cast, container, false);
             ImageView castPortraitView = (ImageView) casts.findViewById(R.id.cast_portrait);
-            Picasso.with(activity).load(castPortrait[i]).into(castPortraitView);
+            Glide.with(context).load(castPortrait[i]).centerCrop().into(castPortraitView);
             TextView castNameView = (TextView) casts.findViewById(R.id.cast_name);
             castNameView.setText(castName[i]);
             castView.addView(casts);

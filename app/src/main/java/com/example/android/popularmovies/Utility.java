@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,9 +49,7 @@ public class Utility {
                 return null;
             }
             movieJsonStr = buffer.toString();
-            //Log.v(LOG_TAG, "check origianl Json: "+ movieJsonStr);
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error", e);
             return null;
         } finally {
             if (urlConnection != null) {
@@ -62,7 +59,7 @@ public class Utility {
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    Log.e(LOG_TAG, "Error Closing Stream", e);
+
                 }
             }
         }

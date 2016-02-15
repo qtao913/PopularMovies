@@ -18,7 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -172,7 +171,6 @@ public class MovieDetailInfoFragment extends Fragment implements LoaderManager.L
 
                          @Override
                          public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                             Log.v("", resource.getCurrent().getClass().toString());
                              Bitmap bitmap = ((GlideBitmapDrawable) resource.getCurrent()).getBitmap();
                              Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                                  public void onGenerated(Palette p) {

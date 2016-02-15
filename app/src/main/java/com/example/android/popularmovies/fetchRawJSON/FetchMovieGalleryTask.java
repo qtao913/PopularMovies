@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
 import com.example.android.popularmovies.BuildConfig;
 import com.example.android.popularmovies.CustomPagerAdapter;
@@ -49,7 +48,6 @@ public class FetchMovieGalleryTask extends AsyncTask<String, Void, String[]> {
                 result[i] = imagePath;
             }
         } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
         return result;

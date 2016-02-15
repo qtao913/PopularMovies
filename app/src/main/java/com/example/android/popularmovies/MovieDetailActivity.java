@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.android.popularmovies.data.MovieContract;
@@ -33,12 +32,12 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_movie_detail, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_movie_detail, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -73,11 +72,6 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         if (intent == null)
             return;
         int currentPos = intent.getIntExtra("current pos", 0);
-//        while (mCursor.moveToNext()) {
-//            Log.v("", "child view id = " + mCursor.getLong(0));
-//            Log.v("", "child cursor position = " + mCursor.getPosition());
-//        }
-
         data.moveToPosition(currentPos);
         mPager = (ViewPager) findViewById(R.id.detail_view_pager);
         mPagerAdapter = new DetailViewPagerAdapter(getSupportFragmentManager(), data);

@@ -108,7 +108,6 @@ public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void>
     @Override
     public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView,
                                         final YouTubeThumbnailLoader youTubeThumbnailLoader) {
-        Log.v(LOG_TAG, "Youtube init success");
         for (int i = 0; i < result.size(); i++) {
             if (this.trailerThumbnailViews[i] == youTubeThumbnailView) {
                 final String viewPath = result.get(i);
@@ -128,7 +127,6 @@ public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void>
                         new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
                             @Override
                             public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
-                                Log.v(LOG_TAG, "Youtube loader released");
                                 youTubeThumbnailLoader.release();
                                 RelativeLayout parentView = (RelativeLayout)youTubeThumbnailView.getParent();
                                 ImageView buttonView = (ImageView)parentView.findViewById(R.id.play_button);
@@ -139,7 +137,6 @@ public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void>
                             @Override
                             public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView,
                                                          YouTubeThumbnailLoader.ErrorReason errorReason) {
-                                Log.v(LOG_TAG, "Youtube loader released");
                                 youTubeThumbnailLoader.release();
                             }
                         });
@@ -150,6 +147,6 @@ public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void>
     @Override
     public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView,
                                         YouTubeInitializationResult youTubeInitializationResult) {
-        Log.v(LOG_TAG, "Youtube init failure");
+
     }
 }

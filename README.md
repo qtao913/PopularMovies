@@ -1,6 +1,7 @@
 ##Introduction##
 This is an application that feeds user with latest popular movie information. User can explore movie details, read reviews, watch gallery slideshow and Youtube trailers. 
 ##Demonstration##
+![my demo]()
 ##Features##
 The application demonstrates the following features:
 

@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks.data;
+package com.sunnietech.hotflicks.persistence;
 
 import android.content.UriMatcher;
 import android.net.Uri;

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.sunnietech.hotflicks.BuildConfig;
 import com.sunnietech.hotflicks.R;
-import com.sunnietech.hotflicks.Utility;
+import com.sunnietech.hotflicks.utility.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;

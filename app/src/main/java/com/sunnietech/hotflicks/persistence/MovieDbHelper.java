@@ -1,10 +1,10 @@
-package com.sunnietech.hotflicks.data;
+package com.sunnietech.hotflicks.persistence;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.sunnietech.hotflicks.data.MovieContract.MovieEntry;
+import com.sunnietech.hotflicks.persistence.MovieContract.MovieEntry;
 
 /**
  * Created by qlzh727 on 12/21/15.

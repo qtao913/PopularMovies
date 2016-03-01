@@ -7,8 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.sunnietech.hotflicks.BuildConfig;
-import com.sunnietech.hotflicks.MovieReviewAdapter;
-import com.sunnietech.hotflicks.Utility;
+import com.sunnietech.hotflicks.adapter.MovieReviewAdapter;
+import com.sunnietech.hotflicks.utility.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;

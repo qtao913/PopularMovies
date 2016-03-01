@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks;
+package com.sunnietech.hotflicks.adapter;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+
+import com.sunnietech.hotflicks.R;
 
 /**
  * Created by qlzh727 on 1/28/16.

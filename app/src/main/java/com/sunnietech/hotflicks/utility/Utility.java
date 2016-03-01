@@ -1,9 +1,11 @@
-package com.sunnietech.hotflicks;
+package com.sunnietech.hotflicks.utility;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+
+import com.sunnietech.hotflicks.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -65,22 +67,6 @@ public class Utility {
         }
         return movieJsonStr;
     }
-
-//    public static String fetchJson(Uri uri) {
-//        try {
-//            URL url = new URL(uri.toString());
-//            InputStream is = url.openStream();
-//            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-//            StringBuilder sb = new StringBuilder();
-//            int cp;
-//            while ((cp = rd.read()) != -1) {
-//                sb.append((char) cp);
-//            }
-//            return sb.toString();
-//        } catch (IOException e) {
-//            return null;
-//        }
-//    }
 
     public static String numberConvert(String num) {
         final double BILLION = 1000000000.0;

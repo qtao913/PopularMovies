@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks;
+package com.sunnietech.hotflicks.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.sunnietech.hotflicks.R;
 import com.sunnietech.hotflicks.fetchRawJSON.FetchMovieReviewTask;
 
 

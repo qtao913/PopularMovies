@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks;
+package com.sunnietech.hotflicks.fragment;
 
 
 import android.content.Intent;
@@ -22,7 +22,12 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.sunnietech.hotflicks.data.MovieContract;
+import com.sunnietech.hotflicks.R;
+import com.sunnietech.hotflicks.activity.MovieDetailActivity;
+import com.sunnietech.hotflicks.activity.SettingsActivity;
+import com.sunnietech.hotflicks.adapter.AndroidImageAdapter;
+import com.sunnietech.hotflicks.utility.Utility;
+import com.sunnietech.hotflicks.persistence.MovieContract;
 import com.sunnietech.hotflicks.fetchRawJSON.FetchMovieTask;
 
 import java.util.concurrent.locks.ReentrantLock;

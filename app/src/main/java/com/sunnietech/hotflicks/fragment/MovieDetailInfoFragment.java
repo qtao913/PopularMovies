@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks;
+package com.sunnietech.hotflicks.fragment;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -30,7 +30,9 @@ import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.sunnietech.hotflicks.data.MovieContract;
+import com.sunnietech.hotflicks.R;
+import com.sunnietech.hotflicks.activity.MovieReviewActivity;
+import com.sunnietech.hotflicks.persistence.MovieContract;
 import com.sunnietech.hotflicks.fetchRawJSON.FetchMovieAddtionalInfoTask;
 import com.sunnietech.hotflicks.fetchRawJSON.FetchMovieCastTask;
 import com.sunnietech.hotflicks.fetchRawJSON.FetchMovieGalleryTask;

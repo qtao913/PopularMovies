@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks;
+package com.sunnietech.hotflicks.activity;
 
 
 import android.annotation.TargetApi;
@@ -12,8 +12,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.sunnietech.hotflicks.data.MovieContract;
-import com.sunnietech.hotflicks.pageAnimations.DepthPageTransformer;
+import com.sunnietech.hotflicks.fragment.MoviePosterMainFragment;
+import com.sunnietech.hotflicks.R;
+import com.sunnietech.hotflicks.adapter.DetailViewPagerAdapter;
+import com.sunnietech.hotflicks.persistence.MovieContract;
+import com.sunnietech.hotflicks.utility.DepthPageTransformer;
 
 @TargetApi(11)
 public class MovieDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {

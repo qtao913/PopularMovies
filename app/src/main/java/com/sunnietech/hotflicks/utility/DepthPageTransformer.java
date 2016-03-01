@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks.pageAnimations;
+package com.sunnietech.hotflicks.utility;
 
 import android.annotation.TargetApi;
 import android.support.v4.view.ViewPager;

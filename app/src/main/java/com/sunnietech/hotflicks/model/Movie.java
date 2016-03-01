@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks;
+package com.sunnietech.hotflicks.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

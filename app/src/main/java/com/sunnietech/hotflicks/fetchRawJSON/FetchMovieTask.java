@@ -10,8 +10,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import com.sunnietech.hotflicks.BuildConfig;
-import com.sunnietech.hotflicks.Utility;
-import com.sunnietech.hotflicks.data.MovieContract.MovieEntry;
+import com.sunnietech.hotflicks.utility.Utility;
+import com.sunnietech.hotflicks.persistence.MovieContract.MovieEntry;
 
 import org.json.JSONArray;
 import org.json.JSONException;

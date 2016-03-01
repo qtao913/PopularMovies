@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks;
+package com.sunnietech.hotflicks.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.sunnietech.hotflicks.fragment.MoviePosterMainFragment;
+import com.sunnietech.hotflicks.R;
 
 /**
  * Created by qlzh727 on 12/13/15.

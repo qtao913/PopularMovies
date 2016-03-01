@@ -7,8 +7,8 @@ import android.os.Handler;
 import android.support.v4.view.ViewPager;
 
 import com.sunnietech.hotflicks.BuildConfig;
-import com.sunnietech.hotflicks.CustomPagerAdapter;
-import com.sunnietech.hotflicks.Utility;
+import com.sunnietech.hotflicks.adapter.CustomPagerAdapter;
+import com.sunnietech.hotflicks.utility.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;

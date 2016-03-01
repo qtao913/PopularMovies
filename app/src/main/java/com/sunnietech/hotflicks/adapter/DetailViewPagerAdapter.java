@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks;
+package com.sunnietech.hotflicks.adapter;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -6,7 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.sunnietech.hotflicks.data.MovieContract;
+import com.sunnietech.hotflicks.fragment.MovieDetailInfoFragment;
+import com.sunnietech.hotflicks.persistence.MovieContract;
 
 
 /**

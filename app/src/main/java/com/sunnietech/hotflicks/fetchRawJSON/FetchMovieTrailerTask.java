@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.sunnietech.hotflicks.BuildConfig;
 import com.sunnietech.hotflicks.R;
-import com.sunnietech.hotflicks.Utility;
+import com.sunnietech.hotflicks.utility.Utility;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;

@@ -3,7 +3,7 @@ package com.sunnietech.hotflicks;
 import android.annotation.TargetApi;
 import android.database.Cursor;
 import android.test.AndroidTestCase;
-import com.sunnietech.hotflicks.data.MovieContract.MovieEntry;
+import com.sunnietech.hotflicks.persistence.MovieContract.MovieEntry;
 import com.sunnietech.hotflicks.fetchRawJSON.FetchMovieTask;
 
 /**

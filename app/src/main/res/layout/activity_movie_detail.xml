@@ -4,5 +4,5 @@
     android:id="@+id/detail_view_pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sunnietech.hotflicks.MovieDetailActivity"
+    tools:context="com.sunnietech.hotflicks.activity.MovieDetailActivity"
     tools:ignore="MergeRootFrame" />

@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks.data;
+package com.sunnietech.hotflicks.persistence;
 
 import android.content.ContentValues;
 import android.database.ContentObserver;

@@ -1,5 +1,7 @@
 ##Introduction##
 The application feeds users with latest popular movie information. User can explore movie details, read reviews, watch gallery slideshows and Youtube trailers. All the data are fetched from the [themoviedb.org](https://www.themoviedb.org/) API. 
+## Try it Out at Google Play##
+https://play.google.com/store/apps/details?id=com.sunnietech.hotflicks
 ##Demonstration##
 ![](./appDemo.gif)
 ##Features##

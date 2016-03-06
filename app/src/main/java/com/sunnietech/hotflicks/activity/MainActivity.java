@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import com.sunnietech.hotflicks.fragment.MoviePosterMainFragment;
 import com.sunnietech.hotflicks.R;
-import com.sunnietech.hotflicks.utility.Utility;
+import com.sunnietech.hotflicks.utility.SharedPreferenceUtil;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        movieSortingPreference = Utility.getPreferredMovieSorting(this);
+        movieSortingPreference = SharedPreferenceUtil.getPreferredMovieSorting(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String sortingPreference = Utility.getPreferredMovieSorting(this);
+        String sortingPreference = SharedPreferenceUtil.getPreferredMovieSorting(this);
         if (sortingPreference != null && !sortingPreference.equals(movieSortingPreference)) {
             MoviePosterMainFragment moviePosterFragment =
                     (MoviePosterMainFragment) getSupportFragmentManager()

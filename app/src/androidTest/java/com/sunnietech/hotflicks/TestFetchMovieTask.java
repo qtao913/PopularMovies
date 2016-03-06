@@ -4,7 +4,7 @@ import android.annotation.TargetApi;
 import android.database.Cursor;
 import android.test.AndroidTestCase;
 import com.sunnietech.hotflicks.persistence.MovieContract.MovieEntry;
-import com.sunnietech.hotflicks.fetchRawJSON.FetchMovieTask;
+import com.sunnietech.hotflicks.task.FetchMovieTask;
 
 /**
  * Created by qlzh727 on 12/28/15.

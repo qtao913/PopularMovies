@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sunnietech.hotflicks.R;
-import com.sunnietech.hotflicks.fetchRawJSON.FetchMovieReviewTask;
+import com.sunnietech.hotflicks.task.FetchMovieReviewTask;
 
 
 public class MovieReviewActivity extends ActionBarActivity {

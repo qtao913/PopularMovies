@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks.fetchRawJSON;
+package com.sunnietech.hotflicks.task;
 
 import android.content.Context;
 import android.net.Uri;
@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sunnietech.hotflicks.BuildConfig;
 import com.sunnietech.hotflicks.R;
-import com.sunnietech.hotflicks.utility.Utility;
+import com.sunnietech.hotflicks.utility.DownloadData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,7 +72,7 @@ public class FetchMovieCastTask extends AsyncTask<String, Void, Void> {
                 .appendPath(CAST)
                 .appendQueryParameter(APIID_PARAM, BuildConfig.POPULAR_MOVIES_API_KEY)
                 .build();
-        String rawJsonData = Utility.fetchRawJson(buildUri);
+        String rawJsonData = DownloadData.fetchRawJson(buildUri);
         try {
             getDataFromJson(rawJsonData);
         } catch (JSONException e) {

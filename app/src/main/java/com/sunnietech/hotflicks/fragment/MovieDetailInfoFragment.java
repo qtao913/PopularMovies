@@ -33,10 +33,10 @@ import com.bumptech.glide.request.target.Target;
 import com.sunnietech.hotflicks.R;
 import com.sunnietech.hotflicks.activity.MovieReviewActivity;
 import com.sunnietech.hotflicks.persistence.MovieContract;
-import com.sunnietech.hotflicks.fetchRawJSON.FetchMovieAddtionalInfoTask;
-import com.sunnietech.hotflicks.fetchRawJSON.FetchMovieCastTask;
-import com.sunnietech.hotflicks.fetchRawJSON.FetchMovieGalleryTask;
-import com.sunnietech.hotflicks.fetchRawJSON.FetchMovieTrailerTask;
+import com.sunnietech.hotflicks.task.FetchMovieAddtionalInfoTask;
+import com.sunnietech.hotflicks.task.FetchMovieCastTask;
+import com.sunnietech.hotflicks.task.FetchMovieGalleryTask;
+import com.sunnietech.hotflicks.task.FetchMovieTrailerTask;
 public class MovieDetailInfoFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int DETAIL_LOADER = 0;
     private Toolbar detailViewToolBar;

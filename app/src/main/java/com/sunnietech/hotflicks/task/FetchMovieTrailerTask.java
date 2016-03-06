@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks.fetchRawJSON;
+package com.sunnietech.hotflicks.task;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,13 +12,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.sunnietech.hotflicks.BuildConfig;
-import com.sunnietech.hotflicks.R;
-import com.sunnietech.hotflicks.utility.Utility;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
+import com.sunnietech.hotflicks.BuildConfig;
+import com.sunnietech.hotflicks.R;
+import com.sunnietech.hotflicks.utility.DownloadData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -77,7 +77,7 @@ public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void>
                 .appendPath(VIDEO)
                 .appendQueryParameter(APIID_PARAM, BuildConfig.POPULAR_MOVIES_API_KEY)
                 .build();
-        String rawJsonData = Utility.fetchRawJson(buildUri);
+        String rawJsonData = DownloadData.fetchRawJson(buildUri);
         try {
             getDataFromJson(rawJsonData);
         } catch (JSONException e) {
@@ -115,9 +115,6 @@ public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void>
                 youTubeThumbnailView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        Intent playYoutube = new Intent(getActivity(), YouTubePlayerActivity.class);
-//                        playYoutube.putExtra("youtube path", viewPath);
-//                        startActivity(playYoutube);
                         Intent intent = YouTubeStandalonePlayer.createVideoIntent
                                 (activity, BuildConfig.YOUTUBE_ANDROID_API_KEY, viewPath, 0, true, false);
                         activity.startActivity(intent);

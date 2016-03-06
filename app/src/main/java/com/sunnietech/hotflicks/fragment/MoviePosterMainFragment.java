@@ -26,9 +26,9 @@ import com.sunnietech.hotflicks.R;
 import com.sunnietech.hotflicks.activity.MovieDetailActivity;
 import com.sunnietech.hotflicks.activity.SettingsActivity;
 import com.sunnietech.hotflicks.adapter.AndroidImageAdapter;
-import com.sunnietech.hotflicks.utility.Utility;
+import com.sunnietech.hotflicks.utility.SharedPreferenceUtil;
 import com.sunnietech.hotflicks.persistence.MovieContract;
-import com.sunnietech.hotflicks.fetchRawJSON.FetchMovieTask;
+import com.sunnietech.hotflicks.task.FetchMovieTask;
 
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -83,7 +83,7 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
 
     private void updateMovie(boolean isRefresh, int itemCount) {
         FetchMovieTask fetchMovieTask = new FetchMovieTask(getActivity(), mSwipeRefreshLayout, isRefresh, itemCount);
-        String sortingPref = Utility.getPreferredMovieSorting(getActivity());
+        String sortingPref = SharedPreferenceUtil.getPreferredMovieSorting(getActivity());
         fetchMovieTask.execute(sortingPref);
         if (isRefresh) {
             currentItemLoadingCount = 0;

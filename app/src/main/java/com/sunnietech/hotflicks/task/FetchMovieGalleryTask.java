@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks.fetchRawJSON;
+package com.sunnietech.hotflicks.task;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -8,7 +8,7 @@ import android.support.v4.view.ViewPager;
 
 import com.sunnietech.hotflicks.BuildConfig;
 import com.sunnietech.hotflicks.adapter.CustomPagerAdapter;
-import com.sunnietech.hotflicks.utility.Utility;
+import com.sunnietech.hotflicks.utility.DownloadData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,7 +65,7 @@ public class FetchMovieGalleryTask extends AsyncTask<String, Void, String[]> {
                 .appendPath(IMAGE)
                 .appendQueryParameter(APIID_PARAM, BuildConfig.POPULAR_MOVIES_API_KEY)
                 .build();
-        String rawJsonData = Utility.fetchRawJson(buildUri);
+        String rawJsonData = DownloadData.fetchRawJson(buildUri);
         try {
             return getDataFromJson(rawJsonData);
         } catch (JSONException e) {

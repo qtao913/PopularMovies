@@ -1,4 +1,4 @@
-package com.sunnietech.hotflicks.fetchRawJSON;
+package com.sunnietech.hotflicks.task;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,11 +11,14 @@ import android.widget.TextView;
 
 import com.sunnietech.hotflicks.BuildConfig;
 import com.sunnietech.hotflicks.R;
-import com.sunnietech.hotflicks.utility.Utility;
+import com.sunnietech.hotflicks.utility.DownloadData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Created by qlzh727 on 1/17/16.
@@ -78,7 +81,7 @@ public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, Void> {
                     .appendPath(params[0])
                     .appendQueryParameter(APIID_PARAM, BuildConfig.POPULAR_MOVIES_API_KEY)
                     .build();
-        String rawJsonData = Utility.fetchRawJson(buildUri);
+        String rawJsonData = DownloadData.fetchRawJson(buildUri);
         try {
             getDataFromJson(rawJsonData);
         } catch (JSONException e) {
@@ -99,7 +102,7 @@ public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, Void> {
         }
         genreView.setText(sb.toString());
         runtimeView.setText(runtime);
-        revenueView.setText(Utility.numberConvert(revenue));
+        revenueView.setText(numberConvert(revenue));
         if (tagline.equals(""))
             tagline = activity.getString(R.string.tagline_not_available);
         taglineView.setText(tagline);
@@ -112,5 +115,31 @@ public class FetchMovieAddtionalInfoTask extends AsyncTask<String, Void, Void> {
                 }
             }
         });
+    }
+
+    private String numberConvert(String num) {
+        final double BILLION = 1000000000.0;
+        final double MILLION = 1000000.0;
+        long number = Long.parseLong(num);
+        StringBuilder sb = new StringBuilder();
+        if (number >= BILLION) {
+            double n = round(number / BILLION, 2);
+            sb.append(Double.toString(n));
+            sb.append("\nBillion");
+            return sb.toString();
+        } else if (number >= MILLION) {
+            double n = round(number / MILLION, 2);
+            sb.append(Double.toString(n));
+            sb.append("\nMillion");
+            return sb.toString();
+        }
+        return Long.toString(number);
+    }
+
+    private double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }

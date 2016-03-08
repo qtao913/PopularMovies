@@ -12,11 +12,10 @@ import android.net.Uri;
  * Created by qlzh727 on 12/25/15.
  */
 public class MovieProvider extends ContentProvider {
-    private static final UriMatcher sUriMatcher = buildUriMatcher();
-    private MovieDbHelper movieDbHelper;
-
     static final int MOVIE = 100;
     static final int MOVIE_ITEM = 101;
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
+    private MovieDbHelper movieDbHelper;
 
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);

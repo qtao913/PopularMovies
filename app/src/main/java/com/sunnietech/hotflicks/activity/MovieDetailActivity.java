@@ -21,11 +21,11 @@ import com.sunnietech.hotflicks.utility.DepthPageTransformer;
 @TargetApi(11)
 public class MovieDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int MOVIE_LOADER = 0;
-    private ViewPager mPager;
-    private PagerAdapter mPagerAdapter;
     private static final String[] MOVIE_TABLE_PROJECTION = {
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID
     };
+    private ViewPager mPager;
+    private PagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

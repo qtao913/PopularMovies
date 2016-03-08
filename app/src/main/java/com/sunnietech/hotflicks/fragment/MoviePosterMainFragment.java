@@ -26,27 +26,24 @@ import com.sunnietech.hotflicks.R;
 import com.sunnietech.hotflicks.activity.MovieDetailActivity;
 import com.sunnietech.hotflicks.activity.SettingsActivity;
 import com.sunnietech.hotflicks.adapter.AndroidImageAdapter;
-import com.sunnietech.hotflicks.utility.SharedPreferenceUtil;
 import com.sunnietech.hotflicks.persistence.MovieContract;
 import com.sunnietech.hotflicks.task.FetchMovieTask;
-
-import java.util.concurrent.locks.ReentrantLock;
+import com.sunnietech.hotflicks.utility.SharedPreferenceUtil;
 
 public class MoviePosterMainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    public AndroidImageAdapter imageAdapter;
+    public static final int COLUMN_IMAGE_URL = 1;
+    public static final String SORT_ORDER = MovieContract.MovieEntry.COLUMN_RANK + " ASC";
     private static final int MOVIE_LOADER = 0;
-    private Toolbar toolbar;
     private static final String[] POSTER_PROJECTION = {
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID,
             MovieContract.MovieEntry.COLUMN_IMAGE_URL
     };
-    public static final int COLUMN_IMAGE_URL = 1;
-    public static final String SORT_ORDER = MovieContract.MovieEntry.COLUMN_RANK + " ASC";
+    private static final boolean IS_REFRESH = true;
+    private static final boolean IS_NOT_REFRESH = false;
+    public AndroidImageAdapter imageAdapter;
+    private Toolbar toolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private final boolean IS_REFRESH = true;
-    private final boolean IS_NOT_REFRESH = false;
     private CoordinatorLayout mCoordinatorLayout;
-    private final ReentrantLock lock = new ReentrantLock();
     private int currentItemLoadingCount = 0;
 
     public MoviePosterMainFragment() {
@@ -135,8 +132,6 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-//                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-//                cursor.moveToPosition(-1);
                 Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
                 intent.putExtra("current pos", position);
                 startActivity(intent);
@@ -152,7 +147,6 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 int total = firstVisibleItem + visibleItemCount;
                 if (total == totalItemCount && total != 0 && currentItemLoadingCount != totalItemCount) {
-//                if (firstVisibleItem == totalItemCount && total != 0 && currentItemLoadingCount != totalItemCount) {
                     currentItemLoadingCount = totalItemCount;
                     updateMovie(IS_NOT_REFRESH, totalItemCount);
                     Snackbar.make(mCoordinatorLayout, getString(R.string.loading_data), Snackbar.LENGTH_SHORT).show();

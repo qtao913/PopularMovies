@@ -14,10 +14,9 @@ import com.sunnietech.hotflicks.persistence.MovieContract;
  * Created by qlzh727 on 1/15/16.
  */
 public class DetailViewPagerAdapter extends FragmentStatePagerAdapter {
+    public static final int COLUMN_ID = 0;
     int numberOfPage;
     Cursor dataRecord;
-
-    public static final int COLUMN_ID = 0;
     public DetailViewPagerAdapter(FragmentManager fm, Cursor cursor) {
         super(fm);
         dataRecord = cursor;

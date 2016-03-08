@@ -39,20 +39,21 @@ import com.sunnietech.hotflicks.task.FetchMovieGalleryTask;
 import com.sunnietech.hotflicks.task.FetchMovieTrailerTask;
 public class MovieDetailInfoFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int DETAIL_LOADER = 0;
-    private Toolbar detailViewToolBar;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
-    private Uri currentUri;
     FetchMovieAddtionalInfoTask addtionalInfoTask;
     FetchMovieGalleryTask galleryTask;
     FetchMovieCastTask castTask;
     FetchMovieTrailerTask trailerTask;
+    private Toolbar detailViewToolBar;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private Uri currentUri;
+
+    public MovieDetailInfoFragment() {}
 
     public static MovieDetailInfoFragment create (Uri uri) {
         MovieDetailInfoFragment fragment = new MovieDetailInfoFragment();
         fragment.currentUri = uri;
         return fragment;
     }
-    public MovieDetailInfoFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

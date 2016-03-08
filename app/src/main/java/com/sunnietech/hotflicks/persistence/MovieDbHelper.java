@@ -10,9 +10,8 @@ import com.sunnietech.hotflicks.persistence.MovieContract.MovieEntry;
  * Created by qlzh727 on 12/21/15.
  */
 public class MovieDbHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 3;
-
     static final String DATABASE_NAME = "movie.db";
+    private static final int DATABASE_VERSION = 3;
 
     public MovieDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

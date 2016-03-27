@@ -26,7 +26,7 @@ public class CustomPagerAdapter extends PagerAdapter{
     }
     @Override
     public int getCount() {
-        return mResources.length;
+        return mResources != null ? mResources.length : 0;
     }
 
     @Override

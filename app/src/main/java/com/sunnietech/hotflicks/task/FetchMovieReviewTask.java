@@ -64,7 +64,8 @@ public class FetchMovieReviewTask extends AsyncTask<String, Void, Void> {
                 .build();
         String rawJsonData = DownloadData.fetchRawJson(buildUri);
         try {
-            getDataFromJson(rawJsonData);
+            if(rawJsonData != null)
+                getDataFromJson(rawJsonData);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -73,6 +74,8 @@ public class FetchMovieReviewTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        if (isCancelled())
+            return;
         if (authorName.length == 0) {
             authorName = new String[1];
             content = new String [1];

@@ -79,7 +79,8 @@ public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void>
                 .build();
         String rawJsonData = DownloadData.fetchRawJson(buildUri);
         try {
-            getDataFromJson(rawJsonData);
+            if (rawJsonData != null)
+                getDataFromJson(rawJsonData);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -88,6 +89,8 @@ public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void>
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        if(isCancelled())
+            return;
         LinearLayout mTrailers = (LinearLayout) rootView.findViewById(R.id.movie_trailers);
         if (mTrailers.getChildCount() == result.size())
             return;
@@ -126,8 +129,10 @@ public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void>
                             public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
                                 youTubeThumbnailLoader.release();
                                 RelativeLayout parentView = (RelativeLayout)youTubeThumbnailView.getParent();
-                                ImageView buttonView = (ImageView)parentView.findViewById(R.id.play_button);
-                                buttonView.setVisibility(View.VISIBLE);
+                                if (parentView != null) {
+                                    ImageView buttonView = (ImageView) parentView.findViewById(R.id.play_button);
+                                    buttonView.setVisibility(View.VISIBLE);
+                                }
 
                             }
 

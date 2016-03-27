@@ -1,8 +1,10 @@
 package com.sunnietech.hotflicks.task;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 
@@ -67,16 +69,20 @@ public class FetchMovieGalleryTask extends AsyncTask<String, Void, String[]> {
                 .build();
         String rawJsonData = DownloadData.fetchRawJson(buildUri);
         try {
-            return getDataFromJson(rawJsonData);
+            if (rawJsonData != null)
+                return getDataFromJson(rawJsonData);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return result;
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onPostExecute(String[] strings) {
         //loading image in the tool bar
+        if(isCancelled() || mActivity.isDestroyed() || mViewPager == null || strings == null)
+            return;
         CustomPagerAdapter mCustomPagerAdapter = new CustomPagerAdapter(mActivity, strings);
         mViewPager.setAdapter(mCustomPagerAdapter);
         periodicalSwipe(strings.length);

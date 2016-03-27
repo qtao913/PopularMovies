@@ -145,7 +145,8 @@ public class FetchMovieTask extends AsyncTask<String, Void, Void> {
                     .build();
         String rawJsonData = DownloadData.fetchRawJson(buildUri);
         try {
-            getMovieDataFromJson(rawJsonData);
+            if (rawJsonData != null)
+                getMovieDataFromJson(rawJsonData);
         } catch (JSONException e) {
             e.printStackTrace();
         }

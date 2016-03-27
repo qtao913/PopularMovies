@@ -1,8 +1,10 @@
 package com.sunnietech.hotflicks.task;
 
-import android.content.Context;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +28,11 @@ public class FetchMovieCastTask extends AsyncTask<String, Void, Void> {
     String[] castName;
     View rootView;
     ViewGroup container;
-    Context context;
-    public FetchMovieCastTask(View rootView, ViewGroup container, Context context) {
+    Activity activity;
+    public FetchMovieCastTask(View rootView, ViewGroup container, Activity activity) {
         this.rootView = rootView;
         this.container = container;
-        this.context = context;
+        this.activity = activity;
     }
 
     private void getDataFromJson(String castJsonStr) throws JSONException {
@@ -74,23 +76,28 @@ public class FetchMovieCastTask extends AsyncTask<String, Void, Void> {
                 .build();
         String rawJsonData = DownloadData.fetchRawJson(buildUri);
         try {
-            getDataFromJson(rawJsonData);
+            if (rawJsonData != null)
+                getDataFromJson(rawJsonData);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onPostExecute(Void aVoid) {
+        if (isCancelled() || activity.isDestroyed() || rootView == null || castPortrait == null || castName == null)
+            return;
         LinearLayout castView = (LinearLayout) rootView.findViewById(R.id.movie_casts);
         if (castView.getChildCount() == castPortrait.length)
             return;
         castView.removeAllViews();
         for (int i = 0; i < castName.length; i++) {
-            View casts = LayoutInflater.from(context).inflate(R.layout.movie_cast, container, false);
+            View casts = LayoutInflater.from(activity).inflate(R.layout.movie_cast, container, false);
             ImageView castPortraitView = (ImageView) casts.findViewById(R.id.cast_portrait);
-            Glide.with(context).load(castPortrait[i]).centerCrop().into(castPortraitView);
+            if(!activity.isDestroyed())
+                Glide.with(activity).load(castPortrait[i]).centerCrop().into(castPortraitView);
             TextView castNameView = (TextView) casts.findViewById(R.id.cast_name);
             castNameView.setText(castName[i]);
             castView.addView(casts);

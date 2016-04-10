@@ -3,29 +3,26 @@ package com.sunnietech.hotflicks.fragment;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.GridView;
 
 import com.sunnietech.hotflicks.R;
-import com.sunnietech.hotflicks.activity.MovieDetailActivity;
 import com.sunnietech.hotflicks.activity.SettingsActivity;
 import com.sunnietech.hotflicks.adapter.AndroidImageAdapter;
+import com.sunnietech.hotflicks.adapter.MoviePosterRecylerViewAdapter;
 import com.sunnietech.hotflicks.persistence.MovieContract;
 import com.sunnietech.hotflicks.task.FetchMovieTask;
 import com.sunnietech.hotflicks.utility.SharedPreferenceUtil;
@@ -45,6 +42,8 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private CoordinatorLayout mCoordinatorLayout;
     private int currentItemLoadingCount = 0;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
 
     public MoviePosterMainFragment() {
     }
@@ -123,36 +122,40 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         );
         if (!movieEntries.moveToFirst())
             updateMovie(IS_REFRESH, 0);
-        imageAdapter = new AndroidImageAdapter(getActivity(), null, 0);
-        GridView movieGridView = (GridView) rootView.findViewById(R.id.grid_movie_view);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            movieGridView.setNestedScrollingEnabled(true);
-        }
-        movieGridView.setAdapter(imageAdapter);
-        movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-                intent.putExtra("current pos", position);
-                startActivity(intent);
-            }
-        });
-        movieGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//        imageAdapter = new AndroidImageAdapter(getActivity(), null, 0);
+//        GridView movieGridView = (GridView) rootView.findViewById(R.id.grid_movie_view);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            movieGridView.setNestedScrollingEnabled(true);
+//        }
+//        movieGridView.setAdapter(imageAdapter);
+//        movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            public void onItemClick(AdapterView<?> parent, View v,
+//                                    int position, long id) {
+//                Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
+//                intent.putExtra("current pos", position);
+//                startActivity(intent);
+//            }
+//        });
+//        movieGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                int total = firstVisibleItem + visibleItemCount;
+//                if (total == totalItemCount && total != 0 && currentItemLoadingCount != totalItemCount) {
+//                    currentItemLoadingCount = totalItemCount;
+//                    updateMovie(IS_NOT_REFRESH, totalItemCount);
+//                    Snackbar.make(mCoordinatorLayout, getString(R.string.loading_data), Snackbar.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                int total = firstVisibleItem + visibleItemCount;
-                if (total == totalItemCount && total != 0 && currentItemLoadingCount != totalItemCount) {
-                    currentItemLoadingCount = totalItemCount;
-                    updateMovie(IS_NOT_REFRESH, totalItemCount);
-                    Snackbar.make(mCoordinatorLayout, getString(R.string.loading_data), Snackbar.LENGTH_SHORT).show();
-                }
-            }
-        });
+        recyclerView = (RecyclerView)rootView.findViewById(R.id.poster_recycler_view);
+        layoutManager = new GridLayoutManager(getActivity(),2);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -174,11 +177,15 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        imageAdapter.swapCursor(data);
+//        imageAdapter.swapCursor(data);
+        MoviePosterRecylerViewAdapter posterRecylerViewAdapter = new MoviePosterRecylerViewAdapter(data, getActivity());
+        recyclerView.setAdapter(posterRecylerViewAdapter);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        imageAdapter.swapCursor(null);
+//        imageAdapter.swapCursor(null);
+        MoviePosterRecylerViewAdapter posterRecylerViewAdapter = new MoviePosterRecylerViewAdapter(null, getActivity());
+        recyclerView.setAdapter(posterRecylerViewAdapter);
     }
 }

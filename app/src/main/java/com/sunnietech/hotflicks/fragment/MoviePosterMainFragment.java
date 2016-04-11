@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -43,7 +44,8 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
     private CoordinatorLayout mCoordinatorLayout;
     private int currentItemLoadingCount = 0;
     private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
+    private GridLayoutManager layoutManager;
+    MoviePosterRecylerViewAdapter posterRecylerViewAdapter;
 
     public MoviePosterMainFragment() {
     }
@@ -100,7 +102,6 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         mSwipeRefreshLayout = (SwipeRefreshLayout)
                 rootView.findViewById(R.id.swipe_refresh_container);
-        //mSwipeRefreshLayout.setSize(SwipeRefreshLayout.LAYOUT_DIRECTION_RTL);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -156,6 +157,22 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         recyclerView = (RecyclerView)rootView.findViewById(R.id.poster_recycler_view);
         layoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if(dy > 0) { //check for scroll down
+                    int totalItemCount = layoutManager.getItemCount();
+                    int visibleItemCount = layoutManager.getChildCount();
+                    int firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+                    int total = firstVisibleItem + visibleItemCount;
+                    if (total == totalItemCount && total != 0 && currentItemLoadingCount != totalItemCount) {
+                        currentItemLoadingCount = totalItemCount;
+                        updateMovie(IS_NOT_REFRESH, totalItemCount);
+                        Snackbar.make(mCoordinatorLayout, getString(R.string.loading_data), Snackbar.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -178,8 +195,14 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 //        imageAdapter.swapCursor(data);
-        MoviePosterRecylerViewAdapter posterRecylerViewAdapter = new MoviePosterRecylerViewAdapter(data, getActivity());
-        recyclerView.setAdapter(posterRecylerViewAdapter);
+        if(posterRecylerViewAdapter == null) {
+            posterRecylerViewAdapter = new MoviePosterRecylerViewAdapter(data, getActivity());
+            recyclerView.setAdapter(posterRecylerViewAdapter);
+        } else {
+            posterRecylerViewAdapter.setCursor(data);
+            posterRecylerViewAdapter.notifyDataSetChanged();
+        }
+
     }
 
     @Override

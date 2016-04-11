@@ -58,4 +58,8 @@ public class MoviePosterRecylerViewAdapter extends RecyclerView.Adapter<MoviePos
             count = cursor.getCount();
         return count;
     }
+
+    public void setCursor(Cursor cursor) {
+        this.cursor = cursor;
+    }
 }

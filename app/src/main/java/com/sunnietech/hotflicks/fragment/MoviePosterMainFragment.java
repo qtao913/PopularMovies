@@ -123,37 +123,6 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         );
         if (!movieEntries.moveToFirst())
             updateMovie(IS_REFRESH, 0);
-//        imageAdapter = new AndroidImageAdapter(getActivity(), null, 0);
-//        GridView movieGridView = (GridView) rootView.findViewById(R.id.grid_movie_view);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            movieGridView.setNestedScrollingEnabled(true);
-//        }
-//        movieGridView.setAdapter(imageAdapter);
-//        movieGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            public void onItemClick(AdapterView<?> parent, View v,
-//                                    int position, long id) {
-//                Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-//                intent.putExtra("current pos", position);
-//                startActivity(intent);
-//            }
-//        });
-//        movieGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                int total = firstVisibleItem + visibleItemCount;
-//                if (total == totalItemCount && total != 0 && currentItemLoadingCount != totalItemCount) {
-//                    currentItemLoadingCount = totalItemCount;
-//                    updateMovie(IS_NOT_REFRESH, totalItemCount);
-//                    Snackbar.make(mCoordinatorLayout, getString(R.string.loading_data), Snackbar.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-
         recyclerView = (RecyclerView)rootView.findViewById(R.id.poster_recycler_view);
         layoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(layoutManager);
@@ -208,7 +177,12 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 //        imageAdapter.swapCursor(null);
-        MoviePosterRecylerViewAdapter posterRecylerViewAdapter = new MoviePosterRecylerViewAdapter(null, getActivity());
-        recyclerView.setAdapter(posterRecylerViewAdapter);
+        if(posterRecylerViewAdapter == null) {
+            posterRecylerViewAdapter = new MoviePosterRecylerViewAdapter(null, getActivity());
+            recyclerView.setAdapter(posterRecylerViewAdapter);
+        } else {
+            posterRecylerViewAdapter.setCursor(null);
+            posterRecylerViewAdapter.notifyDataSetChanged();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.sunnietech.hotflicks.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.sunnietech.hotflicks.R;
+import com.sunnietech.hotflicks.activity.MovieDetailActivity;
 import com.sunnietech.hotflicks.fragment.MoviePosterMainFragment;
 
 /**
@@ -33,9 +35,18 @@ public class MoviePosterRecylerViewAdapter extends RecyclerView.Adapter<MoviePos
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+    public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
+        final View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.image_item_view, parent, false);
+        view.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                int position = ((RecyclerView) parent).getChildLayoutPosition(view);
+                Intent intent = new Intent(activity, MovieDetailActivity.class);
+                intent.putExtra("current pos", position);
+                activity.startActivity(intent);
+            }
+        });
         ViewHolder vh = new ViewHolder(view);
         return vh;
     }

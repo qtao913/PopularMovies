@@ -27,6 +27,7 @@ import com.sunnietech.hotflicks.adapter.MoviePosterRecylerViewAdapter;
 import com.sunnietech.hotflicks.persistence.MovieContract;
 import com.sunnietech.hotflicks.task.FetchMovieTask;
 import com.sunnietech.hotflicks.utility.SharedPreferenceUtil;
+import com.sunnietech.hotflicks.view.AutofitRecyclerView;
 
 public class MoviePosterMainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final int COLUMN_IMAGE_URL = 1;
@@ -43,7 +44,7 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private CoordinatorLayout mCoordinatorLayout;
     private int currentItemLoadingCount = 0;
-    private RecyclerView recyclerView;
+    private AutofitRecyclerView recyclerView;
     private GridLayoutManager layoutManager;
     MoviePosterRecylerViewAdapter posterRecylerViewAdapter;
 
@@ -123,9 +124,8 @@ public class MoviePosterMainFragment extends Fragment implements LoaderManager.L
         );
         if (!movieEntries.moveToFirst())
             updateMovie(IS_REFRESH, 0);
-        recyclerView = (RecyclerView)rootView.findViewById(R.id.poster_recycler_view);
-        layoutManager = new GridLayoutManager(getActivity(),2);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView = (AutofitRecyclerView)rootView.findViewById(R.id.poster_recycler_view);
+        layoutManager = recyclerView.getRecyclerViewLayoutManager();
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
